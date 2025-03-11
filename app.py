@@ -3,7 +3,7 @@ from datetime import datetime
 import calendar
 from pymongo import MongoClient
 
-client = MongoClient('localhost', 27017)
+client = MongoClient('mongodb://jisung719.synology.me:27017')
 db = client.dbjungle
 diary_collection = db.diary
 

@@ -247,11 +247,13 @@
                                 <h2 class="title is-3">${year}년 ${month}월 ${dayNumber}일</h2>
                                 <div class="field">
                                     <label class="label">제목</label>
+
                                     <div class="control">
                                         <input class="input" type="text" id="diary-title" value="${savedData.title}" required>
                                     </div>
                                 </div>
                                 <div class="field">
+                        
                                     <label class="label">내용</label>
                                     <div class="control">
                                         <textarea class="textarea" id="diary-content" required>${savedData.content}</textarea>
@@ -309,16 +311,36 @@
 
                             } else {
                                 uiSection.innerHTML = `
-                                <h2 class="title is-3">${year}년 ${month}월 ${dayNumber}일</h2>
-                                <p class="subtitle">${savedData.title || "(제목 없음)"}</p>
-                                <p class="content">${savedData.content || "(내용 없음)"}</p>
-                                <div class="field">
-                                    <label class="label">오늘의 기분</label>
-                                    <div class="control has-text-centered">
-                                        <span class="icon is-large">${savedData.mood === "happy" ? "😊 행복" : savedData.mood === "neutral" ? "😐 보통" : savedData.mood === "sad" ? "😢 슬픔" : "❓"}</span>
-                                    </div>
-                                </div>
-                                <button class="button is-warning" id="edit-btn">수정</button>
+                                <h2 class="title is-3" style="margin: 0;">${year}년 ${month}월 ${dayNumber}일</h2>
+                                <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 20px;">
+  <p class="subtitle" style="margin: 0; font-weight: bold; font-size: 30px;">
+    ${savedData.title || "(제목 없음)"}
+  </p>
+  <button class="button is-warning" id="edit-btn" style="background-color: #ffdd57; color: #000; border: none; padding: 10px 20px; font-size: 1rem; border-radius: 5px; cursor: pointer;">
+    수정
+  </button>
+</div>
+
+<hr style="height: 2px; border: none; background-color: black;">
+
+<p style="height: 60%; overflow: auto;">
+  ${savedData.content || "(내용 없음)"}
+</p>
+
+<hr style="height: 2px; border: none; background-color: black;">
+
+<div class="field" style="display: flex; align-items: center; justify-content: space-between; padding: 10px; border-radius: 5px;">
+  <!-- "오늘의 기분"과 아이콘 -->
+  <div style="display: flex; align-items: center;">
+    <label class="label" style="font-size: 1.2rem; margin-right: 10px;">오늘의 기분</label>
+    <div class="control has-text-centered" style="font-size: 1.5rem;">
+      <span class="icon is-large">${savedData.mood === "happy" ? "😊 " : savedData.mood === "neutral" ? "😐 " : savedData.mood === "sad" ? "😢" : "❓"}</span>
+    </div>
+  </div>
+</div>
+
+
+
                             `;
 
                                 document.getElementById("edit-btn").addEventListener("click", function () {
