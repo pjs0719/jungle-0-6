@@ -34,6 +34,11 @@
             margin-top: 20px;
         }
 
+        .button-group {
+            display: flex;
+            gap: 10px;
+        }
+
         .icon-buttons {
             display: flex;
             gap: 10px;
@@ -80,8 +85,10 @@
                     <button class="button is-light"><i class="bi bi-emoji-tear"></i></button>
                 </div>
 
-                <!-- 저장 버튼 (우측 정렬) -->
-                <button class="button is-link ml-auto">저장</button>
+                <!-- 저장 & 삭제 버튼 그룹 (우측 정렬) -->
+                <div class="button-group">
+                    <button class="button is-danger">삭제</button>
+                    <button class="button is-link">저장</button>
             </div>
         </div>
     </div>
