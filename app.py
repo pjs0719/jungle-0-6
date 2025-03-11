@@ -1,6 +1,11 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, jsonify
 from datetime import datetime
 import calendar
+
+from pymongo import MongoClient           # pymongo를 임포트 하기(패키지 인스톨 먼저 해야겠죠?)
+client = MongoClient('localhost', 27017)  # mongoDB는 27017 포트로 돌아갑니다.
+db = client.dbjungle                      # 'dbjungle'라는 이름의 db를 만듭니다.
+diary_collection = db.diary  # 'diary' 컬렉션 사용
 
 app = Flask(__name__)
 
@@ -49,5 +54,34 @@ def select_date():
 
     return f"선택된 날짜는 {selected_date.strftime('%Y-%m-%d')}입니다."
 
-if __name__ == "__main__":
+@app.route('/getDiary', methods=['GET'])
+def get_diary():
+    date_key = request.args.get('dateKey')
+    diary = diary_collection.find_one({'dateKey': date_key})
+    if diary:
+        return jsonify({
+            'title': diary['title'],
+            'content': diary['detail'],
+            'mood': diary['emotion']
+        })
+    return jsonify(None)
+
+@app.route('/saveDiary', methods=['POST'])
+def save_diary():
+    data = request.json
+    date_key = data['dateKey']
+    diary_collection.update_one(
+        {'dateKey': date_key},
+        {'$set': {'title': data['title'], 'detail': data['content'], 'emotion': data['emotion'], 'editMode': data['editMode']}},
+        upsert=True
+    )
+    return jsonify({'message': '일기가 저장되었습니다!'})
+
+@app.route('/deleteDiary', methods=['DELETE'])
+def delete_diary():
+    date_key = request.args.get('dateKey')
+    diary_collection.delete_one({'dateKey': date_key})
+    return jsonify({'message': '일기가 삭제되었습니다!'})
+
+if __name__ == '__main__':
     app.run(debug=True)
