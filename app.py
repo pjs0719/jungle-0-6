@@ -27,7 +27,18 @@ def calendar_view():
     today = datetime.today()
     current_day = today.day if today.year == year and today.month == month else None
 
-    return render_template("index.html", year=year, month=month, calendar=month_days, today=current_day)
+   
+    highlight_days = {5: True, 15: True, 16: True,17: True, 20: True}  
+
+    return render_template(
+        "index.html",
+        year=year,
+        month=month,
+        calendar=month_days,
+        today=current_day,
+        highlight_days=highlight_days,
+    )
+
 
 # 📌 일기 저장 (감정 포함)
 @app.route('/diary', methods=['POST'])
