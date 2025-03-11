@@ -1,37 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>캘린더</title>
     <!-- Import Google Font - Poppins -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap">
+    <!-- Bulma CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css" rel="stylesheet">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+        integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+
     <style>
         /* 기본 스타일 */
         body {
             display: flex;
             margin: 0;
-            height: 100vh; /* 브라우저 높이를 꽉 채움 */
+            height: 100vh;
+            /* 브라우저 높이를 꽉 채움 */
             font-family: 'Poppins', sans-serif;
         }
 
         .calendar-section {
-            width: 50%; /* 브라우저 왼쪽 절반 */
-            height: 100%; /* 브라우저 높이를 꽉 채움 */
+            width: 50%;
+            /* 브라우저 왼쪽 절반 */
+            height: 100%;
+            /* 브라우저 높이를 꽉 채움 */
             background: #fff;
-            border-right: 1px solid #ccc; /* 오른쪽 경계선 추가 */
+            border-right: 1px solid #ccc;
+            /* 오른쪽 경계선 추가 */
             display: flex;
             flex-direction: column;
         }
 
         .ui-section {
-            width: 50%; /* 브라우저 오른쪽 절반 */
-            height: 100%; /* 브라우저 높이를 꽉 채움 */
-            background: #f9f9f9; /* 오른쪽 UI 칸 배경색 */
+            width: 50%;
+            /* 브라우저 오른쪽 절반 */
+            height: 100%;
+            /* 브라우저 높이를 꽉 채움 */
+            background: #f9f9f9;
+            /* 오른쪽 UI 칸 배경색 */
             padding: 20px;
         }
 
         .wrapper {
-            flex-grow: 1; /* 캘린더를 세로로 꽉 채움 */
+            flex-grow: 1;
+            /* 캘린더를 세로로 꽉 채움 */
             display: flex;
             flex-direction: column;
         }
@@ -44,38 +63,45 @@
         }
 
         header .current-date {
-            font-size: 1.5rem; /* 폰트 크기 증가 */
+            font-size: 1.5rem;
+            /* 폰트 크기 증가 */
             font-weight: 600;
         }
 
         header .navigation {
             display: flex;
-            gap: 20px; /* 버튼 간격 */
+            gap: 20px;
+            /* 버튼 간격 */
         }
 
         .arrow {
             width: 0;
             height: 0;
-            cursor: pointer; /* 클릭 가능하도록 설정 */
+            cursor: pointer;
+            /* 클릭 가능하도록 설정 */
         }
 
         .arrow-up {
             border-left: 10px solid transparent;
             border-right: 10px solid transparent;
-            border-bottom: 15px solid black; /* 위쪽 삼각형 */
+            border-bottom: 15px solid black;
+            /* 위쪽 삼각형 */
         }
 
         .arrow-down {
             border-left: 10px solid transparent;
             border-right: 10px solid transparent;
-            border-top: 15px solid black; /* 아래쪽 삼각형 */
+            border-top: 15px solid black;
+            /* 아래쪽 삼각형 */
         }
 
         .calendar {
-            padding: 20px; 
-            flex-grow: 1; /* 캘린더를 세로로 꽉 채움 */
+            padding: 20px;
+            flex-grow: 1;
+            /* 캘린더를 세로로 꽉 채움 */
             display: flex;
-            flex-direction: column; /* 요일과 날짜를 세로로 정렬 */
+            flex-direction: column;
+            /* 요일과 날짜를 세로로 정렬 */
         }
 
         .calendar ul {
@@ -86,51 +112,66 @@
         }
 
         .calendar .weeks {
-            flex-basis: auto; /* 요일 행은 고정 크기 */
+            flex-basis: auto;
+            /* 요일 행은 고정 크기 */
         }
 
         .calendar .weeks li {
-            font-weight: bold; /* 요일 강조 */
+            font-weight: bold;
+            /* 요일 강조 */
             width: calc(100% / 7);
-            text-align: center; /* 텍스트 가운데 정렬 */
+            text-align: center;
+            /* 텍스트 가운데 정렬 */
         }
 
         .calendar .days {
-            flex-grow: 1; /* 날짜 부분이 나머지 공간을 차지함 */
+            flex-grow: 1;
+            /* 날짜 부분이 나머지 공간을 차지함 */
             display: flex;
-            flex-wrap: wrap; /* 날짜를 여러 줄로 배치 */
+            flex-wrap: wrap;
+            /* 날짜를 여러 줄로 배치 */
         }
 
         .calendar .days li {
-            width: calc(100% / 7); /* 가로 공간을 균등 분할 */
-            height: calc(100% / 6); /* 세로 공간을 균등 분할 (최대 6주) */
+            width: calc(100% / 7);
+            /* 가로 공간을 균등 분할 */
+            height: calc(100% / 6);
+            /* 세로 공간을 균등 분할 (최대 6주) */
             display: flex;
-            align-items: center; /* 텍스트 수직 가운데 정렬 */
-            justify-content: center; /* 텍스트 가로 가운데 정렬 */
-            font-size: 1.5rem; /* 폰트 크기 증가 */
+            align-items: center;
+            /* 텍스트 수직 가운데 정렬 */
+            justify-content: center;
+            /* 텍스트 가로 가운데 정렬 */
+            font-size: 1.5rem;
+            /* 폰트 크기 증가 */
         }
 
         .days li a {
-            text-decoration: none; /* 밑줄 제거 */
-            color: black; /* 링크 색상 검정으로 변경 */
+            text-decoration: none;
+            /* 밑줄 제거 */
+            color: black;
+            /* 링크 색상 검정으로 변경 */
         }
 
         .days li.inactive {
-            color: #aaa; /* 이전/다음 달 날짜 색상 변경 */
+            color: #aaa;
+            /* 이전/다음 달 날짜 색상 변경 */
         }
 
         .days li.active a {
-            font-weight: bold; /* 오늘 날짜 강조 (굵게 표시) */
+            font-weight: bold;
+            /* 오늘 날짜 강조 (굵게 표시) */
         }
     </style>
 </head>
+
 <body>
     <!-- 왼쪽 캘린더 섹션 -->
     <div class="calendar-section">
         <div class="wrapper">
             <header>
                 <p class="current-date">{{ year }}년 {{ month }}월</p>
-                
+
                 <!-- 이전/다음 달 이동 버튼 -->
                 <div class="navigation">
                     <a href="/?year={{ year }}&month={{ month - 1 }}">
@@ -140,9 +181,9 @@
                         <div class="arrow arrow-down"></div> <!-- 아래쪽 화살표 -->
                     </a>
                 </div>
-                
+
             </header>
-            
+
             <div class="calendar">
                 <!-- 요일 표시 -->
                 <ul class="weeks">
@@ -158,20 +199,21 @@
                 <!-- 날짜 표시 -->
                 <ul class="days">
                     {% for week in calendar %}
-                        {% for day in week %}
-                            {% if day %}
-                                {% if day == today %}
-                                    <!-- 오늘 날짜 강조 -->
-                                    <li class="active"><a href="/select_date?year={{ year }}&month={{ month }}&day={{ day }}">{{ day }}</a></li>
-                                {% else %}
-                                    <!-- 현재 달의 일반 날짜 -->
-                                    <li><a href="/select_date?year={{ year }}&month={{ month }}&day={{ day }}">{{ day }}</a></li>
-                                {% endif %}
-                            {% else %}
-                                <!-- 이전/다음 달의 날짜 -->
-                                <li class="inactive"></li>
-                            {% endif %}
-                        {% endfor %}
+                    {% for day in week %}
+                    {% if day %}
+                    {% if day == today %}
+                    <!-- 오늘 날짜 강조 -->
+                    <li class="active"><a href="/select_date?year={{ year }}&month={{ month }}&day={{ day }}">{{ day
+                            }}</a></li>
+                    {% else %}
+                    <!-- 현재 달의 일반 날짜 -->
+                    <li><a href="/select_date?year={{ year }}&month={{ month }}&day={{ day }}">{{ day }}</a></li>
+                    {% endif %}
+                    {% else %}
+                    <!-- 이전/다음 달의 날짜 -->
+                    <li class="inactive"></li>
+                    {% endif %}
+                    {% endfor %}
                     {% endfor %}
                 </ul>
             </div>
@@ -180,7 +222,124 @@
 
     <!-- 오른쪽 UI 섹션 -->
     <div class="ui-section">
-        
+
     </div>
 </body>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+    const days = document.querySelectorAll(".days li a");
+    const uiSection = document.querySelector(".ui-section");
+
+    days.forEach(day => {
+        day.addEventListener("click", function (event) {
+            event.preventDefault(); // 기본 링크 동작 방지
+
+            // 선택한 날짜 가져오기
+            const urlParams = new URLSearchParams(new URL(day.href).search);
+            const year = urlParams.get("year");
+            const month = urlParams.get("month");
+            const dayNumber = urlParams.get("day");
+            const dateKey = `${year}-${month}-${dayNumber}`; // 날짜를 키로 사용
+
+            // Local Storage에서 데이터 가져오기
+            const savedData = JSON.parse(localStorage.getItem(dateKey)) || { title: "", content: "", mood: "" };
+
+            // UI 업데이트
+            uiSection.innerHTML = `
+                <h2 class="title is-3">${year}년 ${month}월 ${dayNumber}일</h2>
+                
+                <div class="field">
+                    <label class="label">제목</label>
+                    <div class="control">
+                        <input class="input" type="text" id="diary-title" placeholder="일기 제목을 입력하세요" value="${savedData.title}" required>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="label">내용</label>
+                    <div class="control">
+                        <textarea class="textarea" id="diary-content" placeholder="오늘의 일기를 작성하세요" required>${savedData.content}</textarea>
+                    </div>
+                </div>
+
+                <div class="save-btn">
+                    <div class="icon-buttons" style="display: flex; gap: 10px; justify-content: center; margin: 10px 0;">
+                        <button class="button is-light mood-btn" data-mood="happy" style="font-size: 2rem; padding: 10px;">
+                            <i class="bi bi-emoji-grin"></i>
+                        </button>
+                        <button class="button is-light mood-btn" data-mood="neutral" style="font-size: 2rem; padding: 10px;">
+                            <i class="bi bi-emoji-neutral"></i>
+                        </button>
+                        <button class="button is-light mood-btn" data-mood="sad" style="font-size: 2rem; padding: 10px;">
+                            <i class="bi bi-emoji-tear"></i>
+                        </button>
+                    </div>
+
+                    <div class="button-group" style="display: flex; gap: 10px; justify-content: flex-start; margin-top: 20px;">
+                        <button class="button is-danger" id="delete-btn">삭제</button>
+                        <button class="button is-link" id="save-btn">저장</button>
+                    </div>
+                </div>
+            `;
+
+            // 감정 버튼 리스트
+            const moodButtons = document.querySelectorAll(".mood-btn");
+
+            // 색상 매핑 (행복=초록, 보통=노랑, 슬픔=파랑)
+            const moodColors = {
+                "happy": "has-background-success-light has-text-success", // 초록
+                "neutral": "has-background-warning-light has-text-warning", // 노랑
+                "sad": "has-background-info-light has-text-info" // 파랑
+            };
+
+            // 저장된 감정 상태 반영
+            moodButtons.forEach(button => {
+                if (button.dataset.mood === savedData.mood) {
+                    button.classList.add(...moodColors[savedData.mood].split(" "));
+                }
+
+                // 감정 버튼 클릭 이벤트
+                button.addEventListener("click", function () {
+                    // 모든 버튼 색상 초기화
+                    moodButtons.forEach(btn => {
+                        btn.classList.remove("has-background-success-light", "has-text-success",
+                                             "has-background-warning-light", "has-text-warning",
+                                             "has-background-info-light", "has-text-info");
+                    });
+
+                    // 현재 클릭한 버튼에 색상 추가
+                    if (moodColors[this.dataset.mood]) {
+                        this.classList.add(...moodColors[this.dataset.mood].split(" "));
+                    }
+                });
+            });
+
+            // 저장 버튼 클릭 시 데이터 저장
+            document.getElementById("save-btn").addEventListener("click", function () {
+                const title = document.getElementById("diary-title").value;
+                const content = document.getElementById("diary-content").value;
+                const selectedMood = document.querySelector(".mood-btn.has-background-success-light, .mood-btn.has-background-warning-light, .mood-btn.has-background-info-light")?.dataset.mood || "";
+
+                // 데이터 저장 (Local Storage)
+                localStorage.setItem(dateKey, JSON.stringify({ title, content, mood: selectedMood }));
+                alert("일기가 저장되었습니다!");
+            });
+
+            // 삭제 버튼 클릭 시 데이터 삭제
+            document.getElementById("delete-btn").addEventListener("click", function () {
+                localStorage.removeItem(dateKey);
+                document.getElementById("diary-title").value = "";
+                document.getElementById("diary-content").value = "";
+                moodButtons.forEach(btn => btn.classList.remove("has-background-success-light", "has-text-success",
+                                                                "has-background-warning-light", "has-text-warning",
+                                                                "has-background-info-light", "has-text-info")); // 감정 초기화
+                alert("일기가 삭제되었습니다!");
+            });
+        });
+    });
+});
+
+</script>
+
 </html>
