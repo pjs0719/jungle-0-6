@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>로그인 페이지</title>
+    <title>회원가입 페이지</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     <style>
@@ -22,6 +22,7 @@
             align-items: center;
             padding-right: 10%;
         }
+
         .login-card {
             width: 350px;
             position: relative;
@@ -29,19 +30,15 @@
             background-color: rgba(255, 255, 255, 0.8); /* 배경을 약간 투명하게 해서 이미지와 조화롭게 */
             border-radius: 10px; /* 카드 테두리 둥글게 */
         }
+
         .title-with-icon {
             display: flex;
             align-items: center;
             justify-content: center;
         }
-        /* 회원가입 버튼 (완전 좌측 하단) */
-        .signup-button {
-            position: absolute;
-            left: 10px;
-            bottom: 10px;
-        }
-        /* 로그인 버튼 (비밀번호 아래, 카드 우측 하단) */
-        .login-button {
+
+        /* 확인 버튼 (우측 하단으로 이동) */
+        .signupEnd-button {
             position: absolute;
             right: 10px;
             bottom: 10px;
@@ -54,8 +51,17 @@
             <div class="card login-card">
                 <div class="card-content">
                     <h1 class="title has-text-centered title-with-icon">
-                        정글 일기
+                        회원가입
                     </h1>
+                    <div class="field">
+                        <label class="label">nickname</label>
+                        <div class="control has-icons-left">
+                            <input class="input" type="text" placeholder="nickname">
+                            <span class="icon is-small is-left">
+                                <i class="fas fa-envelope"></i>
+                            </span>
+                        </div>
+                    </div>
                     <div class="field">
                         <label class="label">ID</label>
                         <div class="control has-icons-left">
@@ -74,12 +80,18 @@
                             </span>
                         </div>
                     </div>
+                    <div class="field">
+                        <label class="label">password 확인</label>
+                        <div class="control has-icons-left">
+                            <input class="input" type="password" placeholder="password 확인">
+                            <span class="icon is-small is-left">
+                                <i class="fas fa-lock"></i>
+                            </span>
+                        </div>
+                    </div>
 
-                    <!-- 회원가입 버튼 (왼쪽 하단) -->
-                    <button class="button is-ghost signup-button">회원가입</button>
-
-                    <!-- 로그인 버튼 (오른쪽 하단) -->
-                    <button class="button is-primary login-button">로그인</button>
+                    <!-- 확인 버튼 우측 하단으로 이동 -->
+                    <button class="button is-primary signupEnd-button">확인</button>
 
                 </div>
             </div>
