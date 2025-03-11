@@ -2,10 +2,32 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>캘린더</title>
 </head>
 <body>
-    <h1>안녕하세요</h1>
+    <h1>{{ year }}년 {{ month }}월</h1>
+    <table border="1">
+        <tr>
+            <th>일</th>
+            <th>월</th>
+            <th>화</th>
+            <th>수</th>
+            <th>목</th>
+            <th>금</th>
+            <th>토</th>
+        </tr>
+        <!-- Jinja2 반복문으로 캘린더 렌더링 -->
+        {% for week in calendar %}
+        <tr>
+            {% for day in week %}
+            <td>
+                {% if day %}
+                    <a>{{ day }}</a>
+                {% endif %}
+            </td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </table>
 </body>
 </html>
