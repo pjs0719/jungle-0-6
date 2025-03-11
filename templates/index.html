@@ -9,13 +9,6 @@
     <!-- Bulma CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css" rel="stylesheet">
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
-        integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
-
-    <!-- Bootstrap Icons -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
-
     <style>
         /* 기본 스타일 */
         body {
@@ -228,144 +221,120 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-    const days = document.querySelectorAll(".days li a");
-    const uiSection = document.querySelector(".ui-section");
+        const days = document.querySelectorAll(".days li a");
+        const uiSection = document.querySelector(".ui-section");
 
-    days.forEach(day => {
-        day.addEventListener("click", function (event) {
-            event.preventDefault(); // 기본 링크 동작 방지
+        days.forEach(day => {
+            day.addEventListener("click", function (event) {
+                event.preventDefault();
 
-            // 선택한 날짜 가져오기
-            const urlParams = new URLSearchParams(new URL(day.href).search);
-            const year = urlParams.get("year");
-            const month = urlParams.get("month");
-            const dayNumber = urlParams.get("day");
-            const dateKey = `${year}-${month}-${dayNumber}`; // 날짜를 키로 사용
+                const urlParams = new URLSearchParams(new URL(day.href).search);
+                const year = urlParams.get("year");
+                const month = urlParams.get("month");
+                const dayNumber = urlParams.get("day");
+                const dateKey = `${year}-${month}-${dayNumber}`;
 
-            // MongoDB에서 데이터 가져오기
-            fetch(`/getDiary?dateKey=${dateKey}`)
-                .then(response => response.json())
-                .then(savedData => {
-                    if (!savedData) {
-                        savedData = { title: "", content: "", mood: "" }; // 데이터 없으면 기본값 설정
-                    }
+                fetch(`/diary?dateKey=${dateKey}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        let savedData = data || { title: "", content: "", mood: "", editMode: true, date: dateKey };
 
-                    // UI 업데이트
-                    uiSection.innerHTML = `
-                        <h2 class="title is-3">${year}년 ${month}월 ${dayNumber}일</h2>
-                        
-                        <div class="field">
-                            <label class="label">제목</label>
-                            <div class="control">
-                                <input class="input" type="text" id="diary-title" placeholder="일기 제목을 입력하세요" value="${savedData.title}" required>
-                            </div>
-                        </div>
+                        if (data) savedData.editMode = false;
 
-                        <div class="field">
-                            <label class="label">내용</label>
-                            <div class="control">
-                                <textarea class="textarea" id="diary-content" placeholder="오늘의 일기를 작성하세요" required>${savedData.content}</textarea>
-                            </div>
-                        </div>
+                        function renderUI() {
+                            if (savedData.editMode) {
+                                uiSection.innerHTML = `
+                                <h2 class="title is-3">${year}년 ${month}월 ${dayNumber}일</h2>
+                                <div class="field">
+                                    <label class="label">제목</label>
+                                    <div class="control">
+                                        <input class="input" type="text" id="diary-title" value="${savedData.title}" required>
+                                    </div>
+                                </div>
+                                <div class="field">
+                                    <label class="label">내용</label>
+                                    <div class="control">
+                                        <textarea class="textarea" id="diary-content" required>${savedData.content}</textarea>
+                                    </div>
+                                </div>
+                                <div class="field">
+                                    <label class="label">오늘의 기분</label>
+                                    <div class="buttons">
+                                        <button class="button mood-btn ${savedData.mood === 'happy' ? 'is-success' : ''}" data-mood="happy">😊 행복</button>
+                                        <button class="button mood-btn ${savedData.mood === 'neutral' ? 'is-warning' : ''}" data-mood="neutral">😐 보통</button>
+                                        <button class="button mood-btn ${savedData.mood === 'sad' ? 'is-info' : ''}" data-mood="sad">😢 슬픔</button>
+                                    </div>
+                                </div>
+                                <div class="buttons">
+                                    <button class="button is-danger" id="delete-btn">삭제</button>
+                                    <button class="button is-link" id="save-btn">저장</button>
+                                </div>
+                            `;
 
-                        <div class="save-btn">
-                            <div class="icon-buttons" style="display: flex; gap: 10px; justify-content: center; margin: 10px 0;">
-                                <button class="button is-light mood-btn" data-mood="happy" style="font-size: 2rem; padding: 10px;">
-                                    <i class="bi bi-emoji-grin"></i>
-                                </button>
-                                <button class="button is-light mood-btn" data-mood="neutral" style="font-size: 2rem; padding: 10px;">
-                                    <i class="bi bi-emoji-neutral"></i>
-                                </button>
-                                <button class="button is-light mood-btn" data-mood="sad" style="font-size: 2rem; padding: 10px;">
-                                    <i class="bi bi-emoji-tear"></i>
-                                </button>
-                            </div>
+                                let selectedMood = savedData.mood;
 
-                            <div class="button-group" style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;">
-                                <button class="button is-danger" id="delete-btn">삭제</button>
-                                <button class="button is-link" id="save-btn">저장</button>
-                            </div>
-                        </div>
-                    `;
+                                document.querySelectorAll(".mood-btn").forEach(button => {
+                                    button.addEventListener("click", function () {
+                                        selectedMood = this.dataset.mood;
+                                        document.querySelectorAll(".mood-btn").forEach(btn => btn.classList.remove("is-success", "is-warning", "is-info"));
+                                        this.classList.add(selectedMood === "happy" ? "is-success" : selectedMood === "neutral" ? "is-warning" : "is-info");
+                                    });
+                                });
 
-                    // 감정 버튼 리스트
-                    const moodButtons = document.querySelectorAll(".mood-btn");
+                                document.getElementById("save-btn").addEventListener("click", function () {
+                                    savedData.title = document.getElementById("diary-title").value;
+                                    savedData.content = document.getElementById("diary-content").value;
+                                    savedData.mood = selectedMood;
 
-                    // 색상 매핑 (행복=초록, 보통=노랑, 슬픔=파랑)
-                    const moodColors = {
-                        "happy": "has-background-success-light has-text-success", // 초록
-                        "neutral": "has-background-warning-light has-text-warning", // 노랑
-                        "sad": "has-background-info-light has-text-info" // 파랑
-                    };
+                                    fetch('/diary', {
+                                        method: 'POST',
+                                        headers: { 'Content-Type': 'application/json' },
+                                        body: JSON.stringify(savedData)
+                                    }).then(response => response.json())
+                                        .then(data => {
+                                            alert(data.message);
+                                            savedData.editMode = false;
+                                            renderUI();
+                                        });
+                                });
 
-                    // 저장된 감정 상태 반영
-                    moodButtons.forEach(button => {
-                        if (button.dataset.mood === savedData.mood) {
-                            button.classList.add(...moodColors[savedData.mood].split(" "));
+                                document.getElementById("delete-btn").addEventListener("click", function () {
+                                    fetch(`/diary?dateKey=${savedData.date}`, { method: 'DELETE' })
+                                        .then(response => response.json())
+                                        .then(data => {
+                                            alert(data.message);
+                                            uiSection.innerHTML = `<p>일기가 삭제되었습니다.</p>`;
+                                        });
+                                });
+
+                            } else {
+                                uiSection.innerHTML = `
+                                <h2 class="title is-3">${year}년 ${month}월 ${dayNumber}일</h2>
+                                <p class="subtitle">${savedData.title || "(제목 없음)"}</p>
+                                <p class="content">${savedData.content || "(내용 없음)"}</p>
+                                <div class="field">
+                                    <label class="label">오늘의 기분</label>
+                                    <div class="control has-text-centered">
+                                        <span class="icon is-large">${savedData.mood === "happy" ? "😊 행복" : savedData.mood === "neutral" ? "😐 보통" : savedData.mood === "sad" ? "😢 슬픔" : "❓"}</span>
+                                    </div>
+                                </div>
+                                <button class="button is-warning" id="edit-btn">수정</button>
+                            `;
+
+                                document.getElementById("edit-btn").addEventListener("click", function () {
+                                    savedData.editMode = true;
+                                    renderUI();
+                                });
+                            }
                         }
 
-                        // 감정 버튼 클릭 이벤트
-                        button.addEventListener("click", function () {
-                            // 모든 버튼 색상 초기화
-                            moodButtons.forEach(btn => {
-                                btn.classList.remove("has-background-success-light", "has-text-success",
-                                                 "has-background-warning-light", "has-text-warning",
-                                                 "has-background-info-light", "has-text-info");
-                            });
-
-                            // 현재 클릭한 버튼에 색상 추가
-                            if (moodColors[this.dataset.mood]) {
-                                this.classList.add(...moodColors[this.dataset.mood].split(" "));
-                            }
-                        });
+                        renderUI();
                     });
-
-                    // 저장 버튼 클릭 시 데이터 MongoDB에 저장
-                    document.getElementById("save-btn").addEventListener("click", function () {
-                        const title = document.getElementById("diary-title").value;
-                        const content = document.getElementById("diary-content").value;
-                        const selectedMood = document.querySelector(".mood-btn.has-background-success-light, .mood-btn.has-background-warning-light, .mood-btn.has-background-info-light")?.dataset.mood || "";
-
-                        // API 호출하여 MongoDB에 저장
-                        fetch('/saveDiary', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({
-                                dateKey: dateKey,
-                                title: title,
-                                content: content,
-                                emotion: selectedMood,
-                                editMode: true
-                            })
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            alert(data.message || '일기가 저장되었습니다!');
-                        });
-                    });
-
-                    // 삭제 버튼 클릭 시 MongoDB에서 데이터 삭제
-                    document.getElementById("delete-btn").addEventListener("click", function () {
-                        fetch(`/deleteDiary?dateKey=${dateKey}`, { method: 'DELETE' })
-                        .then(response => response.json())
-                        .then(data => {
-                            alert(data.message || '일기가 삭제되었습니다!');
-                            document.getElementById("diary-title").value = "";
-                            document.getElementById("diary-content").value = "";
-                            moodButtons.forEach(btn => btn.classList.remove("has-background-success-light", "has-text-success",
-                                                                            "has-background-warning-light", "has-text-warning",
-                                                                            "has-background-info-light", "has-text-info")); // 감정 초기화
-                        });
-                    });
-                })
-                .catch(err => {
-                    console.error('Error fetching diary data:', err);
-                });
+            });
         });
     });
-});
+
+
 
 </script>
 
