@@ -16,21 +16,17 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // 날짜 선택 시 일기 데이터를 가져오는 함수
-    function handleDateSelection(event) {
-        event.preventDefault();
-        const dayElement = event.target;
-        const year = dayElement.dataset.year;
-        const month = dayElement.dataset.month;
-        const day = dayElement.dataset.day;
-        const dateKey = formatDate(year, month, day);
-
+    function handleDateSelection(event, selectedDate = null) {
+        if (event) event.preventDefault(); // 이벤트 객체가 있을 때만 실행
+    
+        const dateKey = selectedDate || formatDate(
+            event.target.dataset.year, 
+            event.target.dataset.month, 
+            event.target.dataset.day
+        );
+    
         fetch(`/diary?dateKey=${dateKey}`)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('일기 데이터를 가져오는데 실패했습니다.');
-                }
-                return response.json();
-            })
+            .then(response => response.json())
             .then(data => {
                 let savedData;
                 if (data && data.date) {
@@ -50,10 +46,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 renderUI(savedData);
             })
             .catch(error => {
-                console.error("Error fetching diary:", error);
-                uiSection.innerHTML = `<p class="has-text-danger">일기 데이터를 가져오는 데 실패했습니다: ${error.message}</p>`;
+                console.error("❌ Error fetching diary:", error);
             });
     }
+    window.handleDateSelection = handleDateSelection;
 
     // 일기 편집 및 조회 UI를 렌더링하는 함수
     function renderUI(savedData) {
@@ -243,46 +239,59 @@ document.addEventListener("DOMContentLoaded", function () {
         "sad": { emoji: "😢", text: "슬픈 일기" }
     };
 
+    function truncateText(text, maxLength) {
+        return text.length > maxLength ? text.substring(0, maxLength) + "..." : text;
+    }
+
     function fetchFilteredDiaries(mood, sortOrder = "desc") {
         fetch(`/filter-diary?mood=${mood}&order=${sortOrder}`)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error("일기 데이터를 가져오는 데 실패했습니다.");
-                }
-                return response.json();
-            })
+            .then(response => response.json())
             .then(data => {
                 const moodInfo = moodMapping[mood] || { emoji: "", text: "일기" };
-
+    
                 if (data.length === 0) {
                     uiSection.innerHTML = `<p class="has-text-danger">${moodInfo.emoji} ${moodInfo.text}가 없습니다.</p>`;
                     return;
                 }
-
-                // 정렬 버튼 추가 및 일기 목록 렌더링
+    
                 uiSection.innerHTML = `
                     <hr>
                     <div class="sort-container" style="margin-bottom: 10px;">
-
                         <button class="button sort-btn ${sortOrder === 'desc' ? 'is-primary' : ''}" data-order="desc">최신순</button>
                         <button class="button sort-btn ${sortOrder === 'asc' ? 'is-primary' : ''}" data-order="asc">오래된 순</button>
                     </div>
                     <div class="diary-list-container">
                         ${data.map(entry => `
-                            <div class="box">
-                                <h3 class="title is-4">${entry.date}</h3>
-                                <p><strong>제목:</strong> ${entry.title || "제목 없음"}</p>
-                                <p><strong>내용:</strong> ${entry.content || "내용 없음"}</p>
+                            <div class="box diary-entry" data-date="${entry.date}">
+                                <h3 class="title is-4">${entry.title || "제목 없음"}</h3>
+                                <p><strong>내용:</strong>${truncateText(entry.content || "내용 없음", 100)} </p>
+                                <hr>
+                                <p><strong></strong> ${entry.date}</p>
                             </div>
                         `).join('')}
                     </div>
                 `;
-
-                // 정렬 버튼 이벤트 리스너 추가
+    
+                // 정렬 버튼 이벤트 추가
                 document.querySelectorAll(".sort-btn").forEach(button => {
                     button.addEventListener("click", function () {
                         const newSortOrder = this.dataset.order;
                         fetchFilteredDiaries(mood, newSortOrder);
+                    });
+                });
+    
+                // 🟢 일기 카드 클릭 시 `handleDateSelection` 실행
+                document.querySelectorAll(".diary-entry").forEach(entry => {
+                    entry.addEventListener("click", function () {
+                        const selectedDate = this.dataset.date;
+                        console.log("🔍 선택된 날짜:", selectedDate);
+    
+                        if (!selectedDate) {
+                            console.error("❌ 날짜 데이터가 없습니다!");
+                            return;
+                        }
+    
+                        handleDateSelection(null, selectedDate); // ✅ 기존 캘린더 방식으로 보기 화면 이동!
                     });
                 });
             })
@@ -290,7 +299,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 console.error("Error fetching filtered diary:", error);
                 uiSection.innerHTML = `<p class="has-text-danger">일기 데이터를 불러오는 데 실패했습니다.</p>`;
             });
-    }
+    }    
 
     // 감정 필터 버튼 클릭 이벤트 리스너 추가
     moodFilterButtons.forEach(button => {

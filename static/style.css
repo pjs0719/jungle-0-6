@@ -252,3 +252,15 @@ header .navigation {
 .title {
     color: #333;
 }
+
+/* navigation 클래스를 수정하여 아이콘과 화살표들을 오른쪽으로 정렬 */
+.navigation {
+    display: flex;
+    justify-content: flex-end; /* 오른쪽 정렬 */
+    align-items: center;
+}
+
+/* 아이콘 크기를 더 작은 버튼으로 */
+.button .icon {
+    margin-right: 0.5rem; /* 버튼 안의 아이콘과 텍스트 간 간격을 줄여줍니다 */
+}
