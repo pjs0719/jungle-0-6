@@ -8,18 +8,24 @@ body {
 
 .calendar-section {
     width: 50%;
+    /* 항상 화면의 절반 */
     height: 100%;
     background: #fff;
     border-right: 1px solid #ccc;
     display: flex;
     flex-direction: column;
+    box-sizing: border-box;
+    overflow: hidden;
+    /* 콘텐츠가 영역을 벗어나지 않게 함 */
 }
 
 .ui-section {
     width: 50%;
+    /* 항상 화면의 절반 */
     height: 100%;
     background: #f9f9f9;
     padding: 20px;
+    box-sizing: border-box;
 }
 
 .wrapper {
@@ -33,6 +39,7 @@ header {
     align-items: center;
     justify-content: space-between;
     padding: 20px;
+    box-sizing: border-box;
 }
 
 header .current-date {
@@ -68,6 +75,8 @@ header .navigation {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .calendar ul {
@@ -75,22 +84,27 @@ header .navigation {
     list-style: none;
     margin: 0;
     padding: 0;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .calendar .weeks {
     flex-basis: auto;
+    box-sizing: border-box;
 }
 
 .calendar .weeks li {
     font-weight: bold;
     width: calc(100% / 7);
     text-align: center;
+    box-sizing: border-box;
 }
 
 .calendar .days {
     flex-grow: 1;
     display: flex;
     flex-wrap: wrap;
+    box-sizing: border-box;
 }
 
 .calendar .days li {
@@ -100,19 +114,23 @@ header .navigation {
     align-items: center;
     justify-content: center;
     font-size: 1.5rem;
+    box-sizing: border-box;
 }
 
 .days li a {
     text-decoration: none;
     color: black;
+    box-sizing: border-box;
 }
 
 .days li.inactive {
     color: #aaa;
+    box-sizing: border-box;
 }
 
 .days li.active a {
     font-weight: bold;
+    box-sizing: border-box;
 }
 
 .days li.highlight a {
@@ -126,6 +144,7 @@ header .navigation {
     color: #fff;
     text-decoration: none;
     font-weight: bold;
+    box-sizing: border-box;
 }
 
 .days li.highlight a:hover {
@@ -143,6 +162,7 @@ header .navigation {
     display: flex;
     align-items: center;
     gap: 10px;
+    box-sizing: border-box;
 }
 
 .top-right-bar span {
@@ -161,4 +181,20 @@ header .navigation {
 
 .top-right-bar button:hover {
     background-color: #0056b3;
+}
+
+/* 반응형 디자인 (화면 크기가 768px 이하일 때) */
+@media (max-width: 768px) {
+    body {
+        flex-direction: column;
+        /* 세로로 배치 */
+    }
+
+    .calendar-section,
+    .ui-section {
+        width: 100%;
+        /* 전체 너비를 차지 */
+        height: auto;
+        /* 높이는 내용에 따라 자동 조정 */
+    }
 }
