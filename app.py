@@ -86,6 +86,20 @@ def calendar_view():
         highlight_days=highlight_days_cache.get((year, month), {})
     )
 
+@app.route('/filter-diary', methods=['GET'])
+def filter_diary():
+    mood = request.args.get('mood')
+    sort_order = request.args.get('order', 'desc')  # 정렬 방식 (default: 최신순)
+    
+    if not mood:
+        return jsonify({"error": "감정을 선택하세요"}), 400
+    
+    # MongoDB에서 해당 감정의 일기 검색 & 날짜 기준 정렬
+    sort_direction = -1 if sort_order == 'desc' else 1  # 최신순: -1, 오래된 순: 1
+    results = list(diary_collection.find({'mood': mood}, {'_id': False}).sort('date', sort_direction))
+    
+    return jsonify(results)
+
 if __name__ == '__main__':
     today = datetime.today()
     highlight_days_cache[(today.year, today.month)] = calculate_highlight_days(today.year, today.month)

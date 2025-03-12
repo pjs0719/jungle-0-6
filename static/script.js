@@ -231,3 +231,72 @@ document.addEventListener("DOMContentLoaded", function () {
         day.addEventListener("click", handleDateSelection);
     });
 });
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    const moodFilterButtons = document.querySelectorAll(".mood-filter-btn");
+    const uiSection = document.querySelector("#filtered-diaries");
+
+    const moodMapping = {
+        "happy": { emoji: "😊", text: "행복한 일기" },
+        "neutral": { emoji: "😐", text: "보통의 일기" },
+        "sad": { emoji: "😢", text: "슬픈 일기" }
+    };
+
+    function fetchFilteredDiaries(mood, sortOrder = "desc") {
+        fetch(`/filter-diary?mood=${mood}&order=${sortOrder}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("일기 데이터를 가져오는 데 실패했습니다.");
+                }
+                return response.json();
+            })
+            .then(data => {
+                const moodInfo = moodMapping[mood] || { emoji: "", text: "일기" };
+
+                if (data.length === 0) {
+                    uiSection.innerHTML = `<p class="has-text-danger">${moodInfo.emoji} ${moodInfo.text}가 없습니다.</p>`;
+                    return;
+                }
+
+                // 정렬 버튼 추가 및 일기 목록 렌더링
+                uiSection.innerHTML = `
+                    <hr>
+                    <div class="sort-container" style="margin-bottom: 10px;">
+
+                        <button class="button sort-btn ${sortOrder === 'desc' ? 'is-primary' : ''}" data-order="desc">최신순</button>
+                        <button class="button sort-btn ${sortOrder === 'asc' ? 'is-primary' : ''}" data-order="asc">오래된 순</button>
+                    </div>
+                    <div class="diary-list-container">
+                        ${data.map(entry => `
+                            <div class="box">
+                                <h3 class="title is-4">${entry.date}</h3>
+                                <p><strong>제목:</strong> ${entry.title || "제목 없음"}</p>
+                                <p><strong>내용:</strong> ${entry.content || "내용 없음"}</p>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+
+                // 정렬 버튼 이벤트 리스너 추가
+                document.querySelectorAll(".sort-btn").forEach(button => {
+                    button.addEventListener("click", function () {
+                        const newSortOrder = this.dataset.order;
+                        fetchFilteredDiaries(mood, newSortOrder);
+                    });
+                });
+            })
+            .catch(error => {
+                console.error("Error fetching filtered diary:", error);
+                uiSection.innerHTML = `<p class="has-text-danger">일기 데이터를 불러오는 데 실패했습니다.</p>`;
+            });
+    }
+
+    // 감정 필터 버튼 클릭 이벤트 리스너 추가
+    moodFilterButtons.forEach(button => {
+        button.addEventListener("click", function () {
+            const selectedMood = this.dataset.mood;
+            fetchFilteredDiaries(selectedMood);
+        });
+    });
+});

@@ -198,3 +198,57 @@ header .navigation {
         /* 높이는 내용에 따라 자동 조정 */
     }
 }
+
+/* 기존 CSS 코드 유지 */
+
+/* ... (이전 코드) ... */
+
+/* 새로 추가되는 스타일 */
+.mood-filter {
+    margin-top: 10px;
+}
+
+.button {
+    margin-right: 5px;
+}
+
+.diary-list-container {
+    max-height: 70vh;
+    /* 화면 높이의 70% */
+    overflow-y: auto;
+    /* 세로 스크롤 추가 */
+    padding-right: 10px;
+    /* 스크롤바 공간 확보 */
+}
+
+.box {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 10px;
+}
+
+.diary-list-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.diary-list-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.diary-list-container::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+.diary-list-container::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+.has-text-danger {
+    color: red;
+}
+
+.title {
+    color: #333;
+}
