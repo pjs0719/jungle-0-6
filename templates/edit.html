@@ -84,7 +84,7 @@
 
         <!-- 현재 비밀번호 -->
         <label for="current_password">현재 비밀번호:</label>
-        <input type="password" id="current_password">
+        <input type="password" id="current_password" placeholder="현재 비밀번호 입력">
 
         <!-- 비밀번호 변경 -->
         <label for="password">새 비밀번호:</label>
@@ -149,6 +149,10 @@
 
     if (newPassword && newPassword !== confirmPassword) {
         alert("비밀번호가 일치하지 않습니다.");
+        return;
+    }
+    if (newPassword == confirmPassword){
+        alert("같은 비밀번호로 수정이 불가 합니다.");
         return;
     }
 

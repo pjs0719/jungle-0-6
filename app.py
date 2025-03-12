@@ -251,6 +251,7 @@ def delete_account():
 
     # MongoDB에서 사용자 삭제
     result = db.user.delete_one({"id": user_id})
+    diary_collection.delete_many({"user_id": user_id})
 
     if result.deleted_count > 0:
         response = jsonify({"success": True, "message": "회원 탈퇴가 완료되었습니다."})
