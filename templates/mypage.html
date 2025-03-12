@@ -111,9 +111,6 @@
                 sad: "😢 슬픈 날이 많군요... 당신의 마음을 응원합니다. 따뜻한 하루 보내세요! 💙"
             };
 
-            // 📌 Jinja 데이터를 올바르게 변환 (tojson 사용)
-            const moodCounts = {{ mood_counts | tojson }};
-
             // 📌 가장 많은 감정을 찾아 메시지 출력
             function updateMoodMessage() {
                 let highestMood = "neutral"; // 기본값: 보통
