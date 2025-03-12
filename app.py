@@ -10,7 +10,7 @@ from collections import Counter
 
 app = Flask(__name__, static_folder='static')
 
-SECRET_KEY = 'SPARTA'
+SECRET_KEY = 'wjsansrk'
 
 # MongoDB 연결
 client = MongoClient('mongodb://jisung719.synology.me:27017')
@@ -275,6 +275,24 @@ def edit_profile():
     return render_template("edit.html", user_info=user_info)
 
 
+@app.route("/api/edit-nickname", methods=["POST"])
+def edit_nickname_api():
+    user_id = get_user_id()
+    if not user_id:
+        return jsonify({"success": False, "message": "로그인이 필요합니다."}), 401
+    data = request.json
+    new_nick = data.get("nick")
+    update_data = {}
+
+    if new_nick:
+        update_data["nick"] = new_nick
+
+    # Missing the database update
+    if update_data:
+        db.user.update_one({"id": user_id}, {"$set": update_data})
+        return jsonify({"success": True, "message": "닉네임이 수정되었습니다."})
+    return jsonify({"success": False, "message": "변경할 닉네임을 입력하세요."}), 400
+
 
 @app.route("/api/edit-profile", methods=["POST"])
 def edit_profile_api():
@@ -284,16 +302,13 @@ def edit_profile_api():
         return jsonify({"success": False, "message": "로그인이 필요합니다."}), 401
 
     data = request.json
-    new_nick = data.get("nick")
+    
     current_pw = data.get("current_pw")
     new_pw = data.get("new_pw")
 
     update_data = {}
 
-    # 닉네임 변경
-    if new_nick:
-        update_data["nick"] = new_nick
-
+    
     # 비밀번호 변경
     if current_pw and new_pw:
         user = user_collection.find_one({"id": user_id})

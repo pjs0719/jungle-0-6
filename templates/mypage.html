@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <style>
-        /* 페이지 전체 스타일 */
         body {
             background-image: url('https://cdn.pixabay.com/photo/2018/11/11/09/30/nature-3808354_1280.jpg');
             display: flex;
@@ -67,7 +66,15 @@
     <div class="mypage-container">
         <h2 class="title is-3">마이페이지</h2>
         <hr>
-        <p><strong>닉네임:</strong> {{ nick }}</p>
+        <p style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+            <strong>닉네임:</strong>
+            <span id="nickname-text">{{ nick }}</span>
+            <input type="text" id="nickname" value="{{ nick }}" style="display: none; width: 100px; padding: 5px;">
+            <button class="button is-link" id="edit-btn"
+                style="color: #000000; border: none; padding: 0.5rem; cursor: pointer; background: none; font-size: 1.5rem;">
+                ✎
+            </button>
+        </p>
         <p><strong>아이디:</strong> {{ user_id }}</p>
         <hr>
         <h3 class="title is-4">내가 쓴 일기 감정 통계</h3>
@@ -105,12 +112,58 @@
             <button class="home-btn" onclick="goHome()">홈으로</button>
         </div>
     </div>
-    
+
     <script id="moodData" type="application/json">
         {{ mood_counts | tojson | safe }}
     </script>
 
     <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const editButton = document.getElementById("edit-btn");
+            const nicknameText = document.getElementById("nickname-text");
+            const nicknameInput = document.getElementById("nickname");
+
+            // ✎ 버튼 클릭 시 입력창 표시 + 버튼 변경
+            editButton.addEventListener("click", function () {
+                if (nicknameInput.style.display === "none") {
+                    // 닉네임 -> 입력창 변경
+                    nicknameText.style.display = "none";
+                    nicknameInput.style.display = "inline-block";
+                    nicknameInput.focus();
+
+                    // ✎ 버튼 -> ✔ 완료 버튼 변경
+                    editButton.textContent = "✔ 완료";
+                    editButton.style.fontSize = "1rem";
+                } else {
+                    saveNickname();
+                }
+            });
+
+            function saveNickname() {
+                const newNick = nicknameInput.value.trim();
+                if (!newNick) return;
+
+                fetch("/api/edit-nickname", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ nick: newNick })
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        alert(data.message);
+                        if (data.success) {
+                            window.location.href = "/mypage"; // 페이지 새로고침
+                        } else {
+                            nicknameText.style.display = "inline-block";
+                            nicknameInput.style.display = "none";
+                            editButton.textContent = "✎";
+                            editButton.style.fontSize = "1.5rem";
+                        }
+                    })
+                    .catch(error => console.error("닉네임 수정 오류:", error));
+            }
+        });
+
         const moodCounts = JSON.parse(document.getElementById("moodData").textContent);
         // 📌 감정별 응원의 메시지 정의
         const moodMessages = {

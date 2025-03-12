@@ -11,7 +11,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css">
     <style>
-        /* 배경 이미지 다시 추가 */
         body {
             background-image: url('https://cdn.pixabay.com/photo/2018/11/11/09/30/nature-3808354_1280.jpg');
             background-size: cover;
@@ -48,7 +47,6 @@
             padding-bottom: 50px;
         }
 
-        /* 입력 필드 스타일 수정 */
         .input-underline {
             border: none;
             border-bottom: 1px solid #dbdbdb;
@@ -63,13 +61,11 @@
             border-bottom: 2px solid #3273dc;
         }
 
-        /* Placeholder 텍스트 왼쪽 정렬 */
         .input-underline::placeholder {
             text-align: left;
             opacity: 0.7;
         }
 
-        /* 입력 필드 컨테이너 스타일 */
         .field-container {
             padding-left: 20px;
             padding-right: 20px;
@@ -79,7 +75,6 @@
             margin-bottom: 20px;
         }
 
-        /* 로그인 버튼 스타일 (동그라미 형태) */
         .signupEnd-button {
             position: absolute;
             right: -34px;
@@ -91,7 +86,6 @@
             border: none;
             cursor: pointer;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -102,7 +96,6 @@
             background-color: #1468a3;
         }
 
-        /* 화살표 크기와 색상 변경 */
         .signupEnd-button svg {
             width: 40px;
             height: 40px;
@@ -110,6 +103,24 @@
             stroke: white;
             margin: 0;
         }
+
+        .back-login-button {
+        position: absolute;
+        left: 40px;
+        bottom: 50px;
+        background-color: transparent;  /* 배경을 투명하게 설정 */
+        color: #3273dc;  /* 파란색 글씨 */
+        padding: 0;
+        font-size: 16px;
+        border: none;
+        text-decoration: underline;  /* 밑줄 추가 */
+        cursor: pointer;
+    }
+
+    .back-login-button:hover {
+        color: #1468a3;  /* 호버 시 파란색 진하게 */
+        text-decoration: underline;  /* 호버 시 밑줄 강조 */
+    }
     </style>
 </head>
 
@@ -118,74 +129,69 @@
         <div class="login-container">
             <div class="card login-card">
                 <div class="card-content">
-                    <h1 class="title has-text-left title-with-icon">
-                        회원가입
-                    </h1>
+                    <h1 class="title has-text-left title-with-icon">회원가입</h1>
                     <div class="field-container">
                         <div class="field">
                             <label class="label" for="usernick">이름</label>
                             <div class="control has-icons-left">
                                 <input class="input input-underline" type="text" id="usernick">
-                                <span class="icon is-small is-left">
-                                    <i class="fas fa-user"></i>
-                                </span>
+                                <span class="icon is-small is-left"><i class="fas fa-user"></i></span>
                             </div>
                         </div>
                         <div class="field">
-                            <label class="label" for="userid" >ID</label>
+                            <label class="label" for="userid">ID</label>
                             <div class="control has-icons-left">
                                 <input class="input input-underline" type="text" id="userid">
-                                <span class="icon is-small is-left">
-                                    <i class="fas fa-envelope"></i>
-                                </span>
+                                <span class="icon is-small is-left"><i class="fas fa-envelope"></i></span>
                             </div>
                         </div>
                         <div class="field">
                             <label class="label" for="userpw">password</label>
                             <div class="control has-icons-left">
                                 <input class="input input-underline" type="password" id="userpw">
-                                <span class="icon is-small is-left">
-                                    <i class="fas fa-lock"></i>
-                                </span>
+                                <span class="icon is-small is-left"><i class="fas fa-lock"></i></span>
                             </div>
                         </div>
                         <div class="field">
                             <label class="label" for="confirmPassword">password 확인</label>
                             <div class="control has-icons-left">
-                                <input class="input input-underline" type="password" id= "confirmPassword">
-                                <span class="icon is-small is-left">
-                                    <i class="fas fa-lock"></i>
-                                </span>
+                                <input class="input input-underline" type="password" id="confirmPassword">
+                                <span class="icon is-small is-left"><i class="fas fa-lock"></i></span>
                             </div>
                         </div>
                     </div>
-
-                    <!-- 확인 버튼 우측 하단으로 이동 -->
                     <button class="signupEnd-button" onclick="register()">
-                        <!-- 화살표 아이콘 -->
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                             stroke="currentColor" class="size-6">
                             <path stroke-linecap="round" stroke-linejoin="round"
                                 d="M17.25 8.25 21 12m0 0-3.75 3.75M21 12H3" />
                         </svg>
                     </button>
-
+                    <button class="back-login-button" onclick="location.href='login'">로그인 페이지</button>
                 </div>
             </div>
         </div>
     </div>
     <script>
-   
-        // 간단한 회원가입 함수입니다.
-        // 아이디, 비밀번호, 닉네임을 받아 DB에 저장합니다.
         function register() {
-            var password = $('#userpw').val();
-            var confirmPassword = $('#confirmPassword').val();
-    
-            if (password !== confirmPassword){
+            var usernick = $('#usernick').val().trim();
+            var userid = $('#userid').val().trim();
+            var password = $('#userpw').val().trim();
+            var confirmPassword = $('#confirmPassword').val().trim();
+
+            // 모든 필드가 입력되었는지 확인
+            if (!usernick || !userid || !password || !confirmPassword) {
+                alert('모든 필드를 입력해주세요.');
+                return;
+            }
+
+            // 비밀번호가 일치하는지 확인
+            if (password !== confirmPassword) {
                 alert('비밀번호가 일치하지 않습니다.');
                 return;
             }
+
+            // Ajax 요청을 통해 회원가입 처리
             $.ajax({
                 type: "POST",
                 url: "/api/register",
@@ -196,19 +202,16 @@
                 },
                 success: function (response) {
                     if (response['result'] == 'success') {
-                        alert('회원가입이 완료되었습니다.')
-                        window.location.href = '/login'
+                        alert('회원가입이 완료되었습니다.');
+                        window.location.href = '/login';  // 로그인 페이지로 이동
                     } else {
-                        alert(response['msg'])
+                        alert(response['msg']);
                     }
                 }
-            })
+            });
         }
-        
-        
-    
     </script>
-    
+
 </body>
 
 </html>

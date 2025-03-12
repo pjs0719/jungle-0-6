@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <meta charset="UTF-8">
@@ -51,7 +52,8 @@
             margin-top: 20px;
         }
 
-        .save-btn, .cancel-btn {
+        .save-btn,
+        .cancel-btn {
             background-color: #209cee;
             color: white;
             border: none;
@@ -60,7 +62,8 @@
             cursor: pointer;
         }
 
-        .save-btn:hover, .cancel-btn:hover {
+        .save-btn:hover,
+        .cancel-btn:hover {
             background-color: #1468a3;
         }
 
@@ -75,18 +78,15 @@
         }
     </style>
 </head>
+
 <body>
     <div class="edit-container">
-        <h1>프로필 수정</h1>
-        <!-- 닉네임 -->
-        <label for="nickname">닉네임:</label>
-        <input type="text" id="nickname" value="{{ user_info.nick }}">
-
+        <h1>비밀번호 수정</h1>
         <!-- 현재 비밀번호 -->
         <label for="current_password">현재 비밀번호:</label>
         <input type="password" id="current_password" placeholder="현재 비밀번호 입력">
 
-        <!-- 비밀번호 변경 -->
+        <!-- 새 비밀번호 -->
         <label for="password">새 비밀번호:</label>
         <input type="password" id="password" placeholder="새 비밀번호 입력">
 
@@ -108,75 +108,50 @@
                 fetch('/api/delete-account', {
                     method: 'DELETE'
                 })
-                .then(response => response.json())
-                .then(data => {
-                    alert(data.message);
-                    if (data.success) {
-                        window.location.href = "/login";  // 탈퇴 후 로그인 페이지로 이동
-                    }
-                })
-                .catch(error => console.error("삭제 오류:", error));
+                    .then(response => response.json())
+                    .then(data => {
+                        alert(data.message);
+                        if (data.success) {
+                            window.location.href = "/login";  // 탈퇴 후 로그인 페이지로 이동
+                        }
+                    })
+                    .catch(error => console.error("삭제 오류:", error));
             }
         }
 
         function goBack() {
             window.location.href = "/mypage";
         }
-        function saveNickname() {
-        const newNick = document.getElementById("nickname").value;
 
-        fetch("/api/edit-nickname", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ nick: newNick })
-        })
-        .then(response => response.json())
-        .then(data => {
-            alert(data.message);
-            if (data.success) {
-                window.location.href = "/mypage";
+        function saveProfile() {
+            const newPassword = document.getElementById("password").value;
+            const confirmPassword = document.getElementById("password_confirm").value;
+
+            if (newPassword && newPassword !== confirmPassword) {
+                alert("비밀번호가 일치하지 않습니다.");
+                return;
             }
-        })
-        .catch(error => console.error("닉네임 수정 오류:", error));
-    }
 
-    function saveProfile() {
-    const newNick = document.getElementById("nickname").value;
-    const newPassword = document.getElementById("password").value;
-    const confirmPassword = document.getElementById("password_confirm").value;
-
-    if (newPassword && newPassword !== confirmPassword) {
-        alert("비밀번호가 일치하지 않습니다.");
-        return;
-    }
-    if (newPassword == confirmPassword){
-        alert("같은 비밀번호로 수정이 불가 합니다.");
-        return;
-    }
-
-    fetch("/api/edit-profile", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            nick: newNick,
-            current_pw: document.getElementById("current_password").value,  // 현재 비밀번호 추가
-            new_pw: newPassword   // 새 비밀번호를 추가
-        })
-    })
-    .then(response => response.json())
-    .then(data => {
-        alert(data.message);
-        if (data.success) {
-            window.location.href = "/mypage"; // 수정 후 마이페이지로 이동
+            fetch("/api/edit-profile", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    current_pw: document.getElementById("current_password").value,  // 현재 비밀번호 추가
+                    new_pw: newPassword   // 새 비밀번호를 추가
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.message);
+                    if (data.success) {
+                        window.location.href = "/mypage"; // 수정 후 마이페이지로 이동
+                    }
+                })
+                .catch(error => console.error("수정 오류:", error));
         }
-    })
-    .catch(error => console.error("수정 오류:", error));
-}
-
     </script>
 </body>
+
 </html>
