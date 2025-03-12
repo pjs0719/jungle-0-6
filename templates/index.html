@@ -296,30 +296,43 @@
                         if (savedData.editMode) {
                             uiSection.innerHTML = `
                                 <h2 class="title is-3">${year}년 ${month}월 ${dayNumber}일</h2>
-                                <div class="field">
-                                    <label class="label">제목</label>
-                                    <div class="control">
-                                        <input class="input" type="text" id="diary-title" value="${savedData.title}" required>
-                                    </div>
-                                </div>
-                                <div class="field">
-                                    <label class="label">내용</label>
-                                    <div class="control">
-                                        <textarea class="textarea" id="diary-content" required>${savedData.content}</textarea>
-                                    </div>
-                                </div>
-                                <div class="field">
-                                    <label class="label">오늘의 기분</label>
-                                    <div class="buttons">
-                                        <button class="button mood-btn ${savedData.mood === 'happy' ? 'is-success' : ''}" data-mood="happy">😊 행복</button>
-                                        <button class="button mood-btn ${savedData.mood === 'neutral' ? 'is-warning' : ''}" data-mood="neutral">😐 보통</button>
-                                        <button class="button mood-btn ${savedData.mood === 'sad' ? 'is-info' : ''}" data-mood="sad">😢 슬픔</button>
-                                    </div>
-                                </div>
-                                <div class="buttons">
-                                    <button class="button is-danger" id="delete-btn">삭제</button>
-                                    <button class="button is-link" id="save-btn">저장</button>
-                                </div>
+
+<div class="field">
+  <label class="label">제목</label>
+  <div class="control">
+    <input class="input" type="text" id="diary-title" value="${savedData.title}" required>
+  </div>
+</div>
+
+<div class="field">
+  <label class="label">내용</label>
+  <div class="control" style="height: 60vh; overflow-y: auto;">
+    <textarea class="textarea" id="diary-content" style="height: 100%;" required>${savedData.content}</textarea>
+  </div>
+</div>
+
+<div class="field">
+  
+</div>
+
+<hr>
+
+<div class="field" style="display: flex; justify-content: space-between; align-items: center;">
+  <div>
+    <label class="label">오늘의 기분</label>
+    <div class="buttons">
+      <button class="button mood-btn ${savedData.mood === 'happy' ? 'is-success' : ''}" data-mood="happy">😊 행복</button>
+      <button class="button mood-btn ${savedData.mood === 'neutral' ? 'is-warning' : ''}" data-mood="neutral">😐 보통</button>
+      <button class="button mood-btn ${savedData.mood === 'sad' ? 'is-info' : ''}" data-mood="sad">😢 슬픔</button>
+    </div>
+  </div>
+  <div>
+    <button class="button is-danger" id="delete-btn">삭제</button>
+    <button class="button is-link" id="save-btn">저장</button>
+  </div>
+</div>
+
+
                             `;
 
                             let selectedMood = savedData.mood;
@@ -361,10 +374,22 @@
                         } else {
                             uiSection.innerHTML = `
                                 <h2 class="title is-3">${year}년 ${month}월 ${dayNumber}일</h2>
-                                <p>${savedData.title || "(제목 없음)"}</p>
-                                <p>${savedData.content || "(내용 없음)"}</p>
-                                <p>오늘의 기분: ${savedData.mood === "happy" ? "😊 행복" : savedData.mood === "neutral" ? "😐 보통" : savedData.mood === "sad" ? "😢 슬픔" : "❓ 없음"}</p>
-                                <button id="edit-btn">수정</button>
+
+<p style="font-weight: bold; font-size: 1.4em;">${savedData.title || "(제목 없음)"}</p>
+<hr style="height: 2px; border: none; background-color: black;">
+
+
+<div style="height: 60vh; overflow-y: auto;">
+  <p>${savedData.content || "(내용 없음)"}</p>
+</div>
+
+<hr style="height: 2px; border: none; background-color: black;">
+
+
+<div style="display: flex; justify-content: space-between; align-items: center;">
+  <p>오늘의 기분: ${savedData.mood === "happy" ? "😊 행복" : savedData.mood === "neutral" ? "😐 보통" : savedData.mood === "sad" ? "😢 슬픔" : "❓ 없음"}</p>
+  <button id="edit-btn" style="background:none; border:none; cursor:pointer; font-size:2.5em;">✎</button>
+</div>
                             `;
 
                             document.getElementById("edit-btn").addEventListener("click", function () {
