@@ -45,7 +45,8 @@
             gap: 10px;
         }
 
-        .edit-btn, .home-btn {
+        .edit-btn,
+        .home-btn {
             background-color: #209cee;
             color: white;
             border: none;
@@ -55,7 +56,8 @@
             font-size: 1rem;
         }
 
-        .edit-btn:hover, .home-btn:hover {
+        .edit-btn:hover,
+        .home-btn:hover {
             background-color: #1468a3;
         }
     </style>
@@ -67,7 +69,7 @@
         <hr>
         <p><strong>닉네임:</strong> {{ nick }}</p>
         <p><strong>아이디:</strong> {{ user_id }}</p>
-        <hr>    
+        <hr>
         <h3 class="title is-4">내가 쓴 일기 감정 통계</h3>
 
         <!-- ✅ 감정별 개수를 보여주는 표 -->
@@ -102,42 +104,47 @@
             <button class="edit-btn" onclick="editProfile()">수정</button>
             <button class="home-btn" onclick="goHome()">홈으로</button>
         </div>
-
-        <script>
-            // 📌 감정별 응원의 메시지 정의
-            const moodMessages = {
-                happy: "😊 행복한 날이 더 많군요! 앞으로도 더 행복한 날들이 이어지길 바래요! 💛",
-                neutral: "😐 평범한 날들이 많네요! 평범한 것도 좋은 거죠! 🌿",
-                sad: "😢 슬픈 날이 많군요... 당신의 마음을 응원합니다. 따뜻한 하루 보내세요! 💙"
-            };
-
-            // 📌 가장 많은 감정을 찾아 메시지 출력
-            function updateMoodMessage() {
-                let highestMood = "neutral"; // 기본값: 보통
-                let highestValue = 0;
-
-                for (const mood in moodCounts) {
-                    if (moodCounts[mood] > highestValue) {
-                        highestMood = mood;
-                        highestValue = moodCounts[mood];
-                    }
-                }
-
-                // ✅ 메시지 업데이트
-                document.getElementById("moodMessage").textContent = moodMessages[highestMood];
-            }
-
-            document.addEventListener("DOMContentLoaded", updateMoodMessage);
-
-            function editProfile() {
-                window.location.href = "/edit-profile";
-            }
-
-            function goHome() {
-                window.location.href = "/home";
-            }
-        </script>
     </div>
+    
+    <script id="moodData" type="application/json">
+        {{ mood_counts | tojson | safe }}
+    </script>
+
+    <script>
+        const moodCounts = JSON.parse(document.getElementById("moodData").textContent);
+        // 📌 감정별 응원의 메시지 정의
+        const moodMessages = {
+            happy: "😊 행복한 날이 더 많군요! 앞으로도 더 행복한 날들이 이어지길 바래요! 💛",
+            neutral: "😐 평범한 날들이 많네요! 평범한 것도 좋은 거죠! 🌿",
+            sad: "😢 슬픈 날이 많군요... 당신의 마음을 응원합니다. 따뜻한 하루 보내세요! 💙"
+        };
+
+        // 📌 가장 많은 감정을 찾아 메시지 출력
+        function updateMoodMessage() {
+            let highestMood = "neutral"; // 기본값: 보통
+            let highestValue = 0;
+
+            for (const mood in moodCounts) {
+                if (moodCounts[mood] > highestValue) {
+                    highestMood = mood;
+                    highestValue = moodCounts[mood];
+                }
+            }
+
+            // ✅ 메시지 업데이트
+            document.getElementById("moodMessage").textContent = moodMessages[highestMood];
+        }
+
+        document.addEventListener("DOMContentLoaded", updateMoodMessage);
+
+        function editProfile() {
+            window.location.href = "/edit-profile";
+        }
+
+        function goHome() {
+            window.location.href = "/home";
+        }
+    </script>
 </body>
 
 </html>
