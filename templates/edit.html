@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <meta charset="UTF-8">
+    <title>프로필 수정</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body {
+            background-image: url('https://cdn.pixabay.com/photo/2018/11/11/09/30/nature-3808354_1280.jpg');
+            display: flex;
+            background-size: cover;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f5f5f5;
+        }
+
+        .edit-container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 350px;
+        }
+
+        .edit-container h1 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .edit-container input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        input[readonly] {
+            background-color: #eee;
+            cursor: not-allowed;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .save-btn, .cancel-btn {
+            background-color: #209cee;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .save-btn:hover, .cancel-btn:hover {
+            background-color: #1468a3;
+        }
+
+        .delete-btn {
+            color: red;
+            font-weight: bold;
+            text-decoration: underline;
+            background: none;
+            border: none;
+            cursor: pointer;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <div class="edit-container">
+        <h1>프로필 수정</h1>
+        <!-- 닉네임 -->
+        <label for="nickname">닉네임:</label>
+        <input type="text" id="nickname" value="{{ user_info.nick }}">
+
+        <!-- 현재 비밀번호 -->
+        <label for="current_password">현재 비밀번호:</label>
+        <input type="password" id="current_password">
+
+        <!-- 비밀번호 변경 -->
+        <label for="password">새 비밀번호:</label>
+        <input type="password" id="password" placeholder="새 비밀번호 입력">
+
+        <label for="password_confirm">비밀번호 확인:</label>
+        <input type="password" id="password_confirm" placeholder="비밀번호 확인">
+
+        <div class="button-group">
+            <button class="delete-btn" onclick="deleteAccount()">회원탈퇴</button>
+            <div>
+                <button class="cancel-btn" onclick="goBack()">취소</button>
+                <button class="save-btn" onclick="saveProfile()">저장</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function deleteAccount() {
+            if (confirm("정말 회원탈퇴 하시겠습니까?")) {
+                fetch('/api/delete-account', {
+                    method: 'DELETE'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.message);
+                    if (data.success) {
+                        window.location.href = "/login";  // 탈퇴 후 로그인 페이지로 이동
+                    }
+                })
+                .catch(error => console.error("삭제 오류:", error));
+            }
+        }
+
+        function goBack() {
+            window.location.href = "/mypage";
+        }
+        function saveNickname() {
+        const newNick = document.getElementById("nickname").value;
+
+        fetch("/api/edit-nickname", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ nick: newNick })
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert(data.message);
+            if (data.success) {
+                window.location.href = "/mypage";
+            }
+        })
+        .catch(error => console.error("닉네임 수정 오류:", error));
+    }
+
+    function saveProfile() {
+    const newNick = document.getElementById("nickname").value;
+    const newPassword = document.getElementById("password").value;
+    const confirmPassword = document.getElementById("password_confirm").value;
+
+    if (newPassword && newPassword !== confirmPassword) {
+        alert("비밀번호가 일치하지 않습니다.");
+        return;
+    }
+
+    fetch("/api/edit-profile", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            nick: newNick,
+            current_pw: document.getElementById("current_password").value,  // 현재 비밀번호 추가
+            new_pw: newPassword   // 새 비밀번호를 추가
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert(data.message);
+        if (data.success) {
+            window.location.href = "/mypage"; // 수정 후 마이페이지로 이동
+        }
+    })
+    .catch(error => console.error("수정 오류:", error));
+}
+
+    </script>
+</body>
+</html>

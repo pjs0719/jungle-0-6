@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <title>마이페이지</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        /* 페이지 전체 스타일 */
+        body {
+            background-image: url('https://cdn.pixabay.com/photo/2018/11/11/09/30/nature-3808354_1280.jpg');
+            display: flex;
+            background-size: cover;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f5f5f5;
+        }
+
+        .mypage-container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 350px;
+        }
+
+        .mypage-container h1 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .mypage-container p {
+            font-size: 1.2rem;
+            color: #555;
+            margin-bottom: 15px;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            gap: 10px;
+        }
+
+        .edit-btn, .home-btn {
+            background-color: #209cee;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .edit-btn:hover, .home-btn:hover {
+            background-color: #1468a3;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="mypage-container">
+        <h2 class="title is-3">마이페이지</h2>
+        <hr>
+        <p><strong>닉네임:</strong> {{ nick }}</p>
+        <p><strong>아이디:</strong> {{ user_id }}</p>
+        <hr>    
+        <h3 class="title is-4">내가 쓴 일기 감정 통계</h3>
+
+        <!-- ✅ 감정별 개수를 보여주는 표 -->
+        <table class="table is-bordered is-striped is-hoverable is-fullwidth">
+            <thead>
+                <tr>
+                    <th>감정</th>
+                    <th>개수</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>😊 행복</td>
+                    <td>{{ mood_counts.get("happy", 0) }}</td>
+                </tr>
+                <tr>
+                    <td>😐 보통</td>
+                    <td>{{ mood_counts.get("neutral", 0) }}</td>
+                </tr>
+                <tr>
+                    <td>😢 슬픔</td>
+                    <td>{{ mood_counts.get("sad", 0) }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- ✅ 감정에 따른 응원의 메시지 -->
+        <p id="moodMessage" class="has-text-centered has-text-weight-semibold" style="margin-top: 10px;"></p>
+
+        <!-- ✅ "수정" 버튼 & "홈으로" 버튼 추가 -->
+        <div class="button-group">
+            <button class="edit-btn" onclick="editProfile()">수정</button>
+            <button class="home-btn" onclick="goHome()">홈으로</button>
+        </div>
+
+        <script>
+            // 📌 감정별 응원의 메시지 정의
+            const moodMessages = {
+                happy: "😊 행복한 날이 더 많군요! 앞으로도 더 행복한 날들이 이어지길 바래요! 💛",
+                neutral: "😐 평범한 날들이 많네요! 평범한 것도 좋은 거죠! 🌿",
+                sad: "😢 슬픈 날이 많군요... 당신의 마음을 응원합니다. 따뜻한 하루 보내세요! 💙"
+            };
+
+            // 📌 Jinja 데이터를 올바르게 변환 (tojson 사용)
+            const moodCounts = {{ mood_counts | tojson }};
+
+            // 📌 가장 많은 감정을 찾아 메시지 출력
+            function updateMoodMessage() {
+                let highestMood = "neutral"; // 기본값: 보통
+                let highestValue = 0;
+
+                for (const mood in moodCounts) {
+                    if (moodCounts[mood] > highestValue) {
+                        highestMood = mood;
+                        highestValue = moodCounts[mood];
+                    }
+                }
+
+                // ✅ 메시지 업데이트
+                document.getElementById("moodMessage").textContent = moodMessages[highestMood];
+            }
+
+            document.addEventListener("DOMContentLoaded", updateMoodMessage);
+
+            function editProfile() {
+                window.location.href = "/edit-profile";
+            }
+
+            function goHome() {
+                window.location.href = "/home";
+            }
+        </script>
+    </div>
+</body>
+
+</html>

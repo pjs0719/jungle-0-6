@@ -283,3 +283,13 @@ header .navigation {
     text-decoration: none;
     /* 링크 기본 스타일 제거 */
 }
+.nickname-link {
+    text-decoration: none;  /* 기본적으로 밑줄 제거 */
+    color: black; /* 기본 텍스트 색상 */
+    font-weight: bold;
+}
+
+.nickname-link:hover {
+    text-decoration: underline;  /* 마우스를 올리면 밑줄 표시 */
+}
+

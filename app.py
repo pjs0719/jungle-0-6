@@ -6,6 +6,7 @@ import certifi
 import jwt
 import datetime
 import hashlib
+from collections import Counter
 
 app = Flask(__name__, static_folder='static')
 
@@ -214,10 +215,104 @@ def filter_diary():
 
     return jsonify(results)
 
+@app.route("/mypage")
+def mypage():
+    user_id = get_user_id()
+    if not user_id:
+        return redirect(url_for("login", msg="로그인이 필요합니다."))
 
+    # ✅ MongoDB에서 닉네임과 아이디 가져오기
+    user_info = db.user.find_one({"id": user_id}, {"_id": 0, "nick": 1, "id": 1})
+    
+    if not user_info:
+        return redirect(url_for("login", msg="사용자 정보를 찾을 수 없습니다."))
+
+    # ✅ 사용자가 지금까지 쓴 모든 일기의 감정 데이터 가져오기
+    diary_entries = db.diary.find({"user_id": user_id}, {"mood": 1, "_id": 0})
+    
+    # ✅ 감정별 개수 계산
+    moods = [entry["mood"] for entry in diary_entries if "mood" in entry]
+    mood_counts = dict(Counter(moods))  # 예: {"happy": 20, "neutral": 10, "sad": 5}
+
+    return render_template(
+        "mypage.html",
+        user_info=user_info,
+        nick=user_info.get("nick", "사용자"),
+        user_id=user_info.get("id"),
+        mood_counts=mood_counts  # ✅ 감정 통계를 전달
+    )
+    
+@app.route("/api/delete-account", methods=["DELETE"])
+def delete_account():
+    """회원탈퇴 API"""
+    user_id = get_user_id()
+    if not user_id:
+        return jsonify({"success": False, "message": "로그인이 필요합니다."}), 401
+
+    # MongoDB에서 사용자 삭제
+    result = db.user.delete_one({"id": user_id})
+
+    if result.deleted_count > 0:
+        response = jsonify({"success": True, "message": "회원 탈퇴가 완료되었습니다."})
+        response.delete_cookie("mytoken")  # 로그인 토큰 삭제 (자동 로그아웃)
+        return response
+    else:
+        return jsonify({"success": False, "message": "회원 정보를 찾을 수 없습니다."}), 404
+    
+@app.route("/edit-profile")
+def edit_profile():
+    """프로필 수정 페이지"""
+    user_id = get_user_id()
+    if not user_id:
+        return redirect(url_for("login", msg="로그인이 필요합니다."))
+
+    user_info = db.user.find_one({"id": user_id}, {"_id": 0, "nick": 1, "id": 1})
+    
+    if not user_info:
+        return redirect(url_for("login", msg="사용자 정보를 찾을 수 없습니다."))
+
+    return render_template("edit.html", user_info=user_info)
+
+
+
+@app.route("/api/edit-profile", methods=["POST"])
+def edit_profile_api():
+    """닉네임 및 비밀번호 수정 API"""
+    user_id = get_user_id()
+    if not user_id:
+        return jsonify({"success": False, "message": "로그인이 필요합니다."}), 401
+
+    data = request.json
+    new_nick = data.get("nick")
+    current_pw = data.get("current_pw")
+    new_pw = data.get("new_pw")
+
+    update_data = {}
+
+    # 닉네임 변경
+    if new_nick:
+        update_data["nick"] = new_nick
+
+    # 비밀번호 변경
+    if current_pw and new_pw:
+        user = user_collection.find_one({"id": user_id})
+        if not user:
+            return jsonify({"success": False, "message": "사용자를 찾을 수 없습니다."}), 404
+
+        current_pw_hash = hashlib.sha256(current_pw.encode("utf-8")).hexdigest()
+        if user["pw"] != current_pw_hash:
+            return jsonify({"success": False, "message": "현재 비밀번호가 일치하지 않습니다."}), 403
+
+        new_pw_hash = hashlib.sha256(new_pw.encode("utf-8")).hexdigest()
+        update_data["pw"] = new_pw_hash
+
+    if update_data:
+        user_collection.update_one({"id": user_id}, {"$set": update_data})
+        return jsonify({"success": True, "message": "프로필이 수정되었습니다."})
+    
+    return jsonify({"success": False, "message": "변경할 내용을 입력하세요."}), 400
+
+    
 if __name__ == "__main__":
     app.run("0.0.0.0", port=5001, debug=True)
-    today = datetime.datetime.today()
-    user_id = get_user_id()
-    if user_id:
-        highlight_days_cache[(user_id, today.year, today.month)] = calculate_user_highlight_days(user_id, today.year, today.month)
+    
