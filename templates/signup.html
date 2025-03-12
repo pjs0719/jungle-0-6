@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>회원가입 페이지</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css">
     <style>
         /* 배경 이미지 다시 추가 */
         body {
@@ -122,7 +122,7 @@
                         <div class="field">
                             <label class="label">별명</label>
                             <div class="control has-icons-left">
-                                <input class="input input-underline" type="text" >
+                                <input class="input input-underline" type="text" id="nickname">
                                 <span class="icon is-small is-left">
                                     <i class="fas fa-user"></i>
                                 </span>
@@ -131,7 +131,7 @@
                         <div class="field">
                             <label class="label">ID</label>
                             <div class="control has-icons-left">
-                                <input class="input input-underline" type="text">
+                                <input class="input input-underline" type="text" id="username">
                                 <span class="icon is-small is-left">
                                     <i class="fas fa-envelope"></i>
                                 </span>
@@ -140,7 +140,7 @@
                         <div class="field">
                             <label class="label">password</label>
                             <div class="control has-icons-left">
-                                <input class="input input-underline" type="password" >
+                                <input class="input input-underline" type="password" id="password">
                                 <span class="icon is-small is-left">
                                     <i class="fas fa-lock"></i>
                                 </span>
@@ -149,7 +149,7 @@
                         <div class="field">
                             <label class="label">password 확인</label>
                             <div class="control has-icons-left">
-                                <input class="input input-underline" type="password" >
+                                <input class="input input-underline" type="password" id="passwordCheck">
                                 <span class="icon is-small is-left">
                                     <i class="fas fa-lock"></i>
                                 </span>
@@ -158,7 +158,7 @@
                     </div>
 
                     <!-- 확인 버튼 우측 하단으로 이동 -->
-                    <button class="signupEnd-button">
+                    <button class="signupEnd-button" onclick="validateSignup()">
                         <!-- 화살표 아이콘 -->
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                             stroke="currentColor" class="size-6">
@@ -171,6 +171,28 @@
             </div>
         </div>
     </div>
+
+    <script>
+        function validateSignup() {
+            const nickname = document.getElementById('nickname').value;
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const passwordCheck = document.getElementById('passwordCheck').value;
+
+            if (nickname === '' || username === '' || password === '' || passwordCheck === '') {
+                alert('모든 필드를 입력해주세요.');
+                return;
+            }
+
+            if (password !== passwordCheck) {
+                alert('비밀번호 확인이 일치하지 않습니다.');
+                return;
+            }
+
+            // 여기에 실제 회원가입 로직을 추가할 수 있습니다.
+            alert('회원가입 성공!');
+        }
+    </script>
 </body>
 
 </html>
