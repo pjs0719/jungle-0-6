@@ -124,6 +124,16 @@ def calendar_view():
         month = 1
 
     user_id = get_user_id()
+    if not user_id:
+        return redirect(url_for("login", msg="로그인이 필요합니다."))
+
+    # ✅ MongoDB에서 user_id에 해당하는 nick 가져오기
+    user_info = db.user.find_one({"id": user_id}, {"_id": 0, "nick": 1})
+    if not user_info:
+        return redirect(url_for("login", msg="사용자 정보를 찾을 수 없습니다."))
+
+    nick = user_info.get("nick", "사용자")  # 닉네임 없을 경우 기본값 설정
+    
     highlight_days_cache[(user_id, year, month)] = calculate_user_highlight_days(user_id, year, month)
 
     return render_template(
@@ -133,6 +143,7 @@ def calendar_view():
         calendar=calendar.Calendar(firstweekday=6).monthdayscalendar(year, month),
         today=datetime.datetime.today().day if (datetime.datetime.today().year, datetime.datetime.today().month) == (year, month) else None,
         highlight_days=highlight_days_cache.get((user_id, year, month), {}),
+        nick=nick
     )
 
 

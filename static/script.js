@@ -140,6 +140,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     })
                     .then(data => {
                         alert(data.message);
+                        window.location.href = "/home";
                      // 전체 페이지를 초기 상태로 새로고침
                     })
                     .catch(error => {
@@ -189,7 +190,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // 왼쪽 캘린더 부분을 새로고침하는 함수
     function refreshCalendar(year, month, day) {
-        fetch(`/?year=${year}&month=${month}&partial=true`)
+        fetch(`/calendar-partial?year=${year}&month=${month}`)
             .then(response => response.text())
             .then(html => {
                 const parser = new DOMParser();
