@@ -1,207 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <title>캘린더</title>
-    <!-- Import Google Font - Poppins -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap">
-    <!-- Bulma CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css" rel="stylesheet">
-
-    <style>
-        /* 기본 스타일 */
-        body {
-            display: flex;
-            margin: 0;
-            height: 100vh;
-            /* 브라우저 높이를 꽉 채움 */
-            font-family: 'Poppins', sans-serif;
-        }
-
-        .calendar-section {
-            width: 50%;
-            /* 브라우저 왼쪽 절반 */
-            height: 100%;
-            /* 브라우저 높이를 꽉 채움 */
-            background: #fff;
-            border-right: 1px solid #ccc;
-            /* 오른쪽 경계선 추가 */
-            display: flex;
-            flex-direction: column;
-        }
-
-        .ui-section {
-            width: 50%;
-            /* 브라우저 오른쪽 절반 */
-            height: 100%;
-            /* 브라우저 높이를 꽉 채움 */
-            background: #f9f9f9;
-            /* 오른쪽 UI 칸 배경색 */
-            padding: 20px;
-        }
-
-        .wrapper {
-            flex-grow: 1;
-            /* 캘린더를 세로로 꽉 채움 */
-            display: flex;
-            flex-direction: column;
-        }
-
-        header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 20px;
-        }
-
-        header .current-date {
-            font-size: 1.5rem;
-            /* 폰트 크기 증가 */
-            font-weight: 600;
-        }
-
-        header .navigation {
-            display: flex;
-            gap: 20px;
-            /* 버튼 간격 */
-        }
-
-        .arrow {
-            width: 0;
-            height: 0;
-            cursor: pointer;
-            /* 클릭 가능하도록 설정 */
-        }
-
-        .arrow-up {
-            border-left: 10px solid transparent;
-            border-right: 10px solid transparent;
-            border-bottom: 15px solid black;
-            /* 위쪽 삼각형 */
-        }
-
-        .arrow-down {
-            border-left: 10px solid transparent;
-            border-right: 10px solid transparent;
-            border-top: 15px solid black;
-            /* 아래쪽 삼각형 */
-        }
-
-        .calendar {
-            padding: 20px;
-            flex-grow: 1;
-            /* 캘린더를 세로로 꽉 채움 */
-            display: flex;
-            flex-direction: column;
-            /* 요일과 날짜를 세로로 정렬 */
-        }
-
-        .calendar ul {
-            display: flex;
-            list-style: none;
-            margin: 0;
-            padding: 0;
-        }
-
-        .calendar .weeks {
-            flex-basis: auto;
-            /* 요일 행은 고정 크기 */
-        }
-
-        .calendar .weeks li {
-            font-weight: bold;
-            /* 요일 강조 */
-            width: calc(100% / 7);
-            text-align: center;
-            /* 텍스트 가운데 정렬 */
-        }
-
-        .calendar .days {
-            flex-grow: 1;
-            /* 날짜 부분이 나머지 공간을 차지함 */
-            display: flex;
-            flex-wrap: wrap;
-            /* 날짜를 여러 줄로 배치 */
-        }
-
-        .calendar .days li {
-            width: calc(100% / 7);
-            /* 가로 공간을 균등 분할 */
-            height: calc(100% / 6);
-            /* 세로 공간을 균등 분할 (최대 6주) */
-            display: flex;
-            align-items: center;
-            /* 텍스트 수직 가운데 정렬 */
-            justify-content: center;
-            /* 텍스트 가로 가운데 정렬 */
-            font-size: 1.5rem;
-            /* 폰트 크기 증가 */
-        }
-
-        .days li a {
-            text-decoration: none;
-            /* 밑줄 제거 */
-            color: black;
-            /* 링크 색상 검정으로 변경 */
-        }
-
-        .days li.inactive {
-            color: #aaa;
-            /* 이전/다음 달 날짜 색상 변경 */
-        }
-
-        .days li.active a {
-            font-weight: bold;
-            /* 오늘 날짜 강조 (굵게 표시) */
-        }
-        .days li.highlight a {
-    display: inline-block;
-    width: 80px; /* 동그라미 크기 */
-    height: 80px; /* 동그라미 크기 */
-    line-height: 80px; /* 텍스트를 중앙에 배치 */
-    text-align: center; /* 텍스트 가운데 정렬 */
-    border-radius: 50%; /* 동그라미 모양 */
-    background-color: #007bff; /* 동그라미 배경색 (파란색) */
-    color: #fff; /* 텍스트 색상 (흰색) */
-    text-decoration: none; /* 링크 밑줄 제거 */
-    font-weight: bold; /* 글자 강조 (선택 사항) */
-}
-
-.days li.highlight a:hover {
-    background-color: #0056b3; /* 마우스 오버 시 더 어두운 파란색 */
-}
-
-.days li a {
-    text-decoration: none; /* 링크 밑줄 제거 (일반 날짜에도 적용) */
-}
-.top-right-bar {
-            position: fixed; /* 화면 상단에 고정 */
-            top: 10px; /* 상단 여백 */
-            right: 10px; /* 오른쪽 여백 */
-            display: flex; /* 닉네임과 버튼을 가로로 배치 */
-            align-items: center; /* 세로 정렬 */
-            gap: 10px; /* 요소 간 간격 */
-        }
-
-        .top-right-bar span {
-            font-size: 1rem; /* 닉네임 폰트 크기 */
-            font-weight: bold; /* 닉네임 강조 */
-        }
-
-        .top-right-bar button {
-            background-color: #007bff; /* 버튼 배경색 */
-            color: white; /* 버튼 텍스트 색상 */
-            border-radius: 5px; /* 버튼 모서리 둥글게 */
-            padding: 5px 10px; /* 버튼 내부 여백 */
-            border: none; /* 버튼 테두리 제거 */
-            cursor: pointer; /* 클릭 가능하도록 설정 */
-        }
-
-        .top-right-bar button:hover {
-            background-color: #0056b3; /* 마우스 오버 시 색상 변경 */
-        }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
 <body>
@@ -209,26 +11,21 @@
         <span>닉네임</span>
         <button onclick="logout()">로그아웃</button>
     </div>
-    <!-- 왼쪽 캘린더 섹션 -->
     <div class="calendar-section">
         <div class="wrapper">
             <header>
                 <p class="current-date">{{ year }}년 {{ month }}월</p>
-
-                <!-- 이전/다음 달 이동 버튼 -->
                 <div class="navigation">
                     <a href="/?year={{ year }}&month={{ month - 1 }}">
-                        <div class="arrow arrow-up"></div> <!-- 위쪽 화살표 -->
+                        <div class="arrow arrow-up"></div>
                     </a>
                     <a href="/?year={{ year }}&month={{ month + 1 }}">
-                        <div class="arrow arrow-down"></div> <!-- 아래쪽 화살표 -->
+                        <div class="arrow arrow-down"></div>
                     </a>
                 </div>
-
             </header>
 
             <div class="calendar">
-                <!-- 요일 표시 -->
                 <ul class="weeks">
                     <li>일</li>
                     <li>월</li>
@@ -239,14 +36,13 @@
                     <li>토</li>
                 </ul>
 
-                <!-- 날짜 표시 -->
                 <ul class="days">
                     {% for week in calendar %}
                     {% for day in week %}
-                    {% if day > 0 %} <!-- Ignore padding days (0) -->
+                    {% if day > 0 %}
                     {% set is_highlighted = highlight_days.get(day, False) %}
                     <li class="{{ 'highlight' if is_highlighted else '' }}">
-                        <a href="/select_date?year={{ year }}&month={{ month }}&day={{ day }}">
+                        <a href="#" data-year="{{ year }}" data-month="{{ month }}" data-day="{{ day }}">
                             {{ day }}
                         </a>
                     </li>
@@ -260,166 +56,12 @@
         </div>
     </div>
 
-    <!-- 오른쪽 UI 섹션 -->
     <div class="ui-section">
-        <a href="/select_date?year=2025&month=3&day=1">
-            안녕하세요
-        </a>
+        <h2 class="title is-3">날짜를 선택하세요</h2>
+        <p>선택한 날짜의 일기가 여기에 표시됩니다.</p>
     </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
-
-<script>
-    function logout() {
-            alert("로그아웃되었습니다.");
-            window.location.href = "/logout"; // 로그아웃 처리 URL로 이동
-    }
-    document.addEventListener("DOMContentLoaded", function () {
-        const days = document.querySelectorAll(".days li a");
-        const uiSection = document.querySelector(".ui-section");
-        const staticLink = uiSection.querySelector("a"); // ui-section 내부의 링크 선택
-
-        function handleDateSelection(link) {
-            const urlParams = new URLSearchParams(new URL(link.href).search);
-            const year = urlParams.get("year");
-            const month = urlParams.get("month");
-            const dayNumber = urlParams.get("day");
-            const dateKey = `${year}-${month}-${dayNumber}`;
-
-            fetch(`/diary?dateKey=${dateKey}`)
-                .then(response => response.json())
-                .then(data => {
-                    let savedData = data || { title: "", content: "", mood: "", editMode: true, date: dateKey };
-
-                    if (data) savedData.editMode = false;
-
-                    function renderUI() {
-                        if (savedData.editMode) {
-                            uiSection.innerHTML = `
-                                <h2 class="title is-3">${year}년 ${month}월 ${dayNumber}일</h2>
-
-<div class="field">
-  <label class="label">제목</label>
-  <div class="control">
-    <input class="input" type="text" id="diary-title" value="${savedData.title}" required>
-  </div>
-</div>
-
-<div class="field">
-  <label class="label">내용</label>
-  <div class="control" style="height: 60vh; overflow-y: auto;">
-    <textarea class="textarea" id="diary-content" style="height: 100%;" required>${savedData.content}</textarea>
-  </div>
-</div>
-
-<div class="field">
-  
-</div>
-
-<hr>
-
-<div class="field" style="display: flex; justify-content: space-between; align-items: center;">
-  <div>
-    <label class="label">오늘의 기분</label>
-    <div class="buttons">
-      <button class="button mood-btn ${savedData.mood === 'happy' ? 'is-success' : ''}" data-mood="happy">😊 행복</button>
-      <button class="button mood-btn ${savedData.mood === 'neutral' ? 'is-warning' : ''}" data-mood="neutral">😐 보통</button>
-      <button class="button mood-btn ${savedData.mood === 'sad' ? 'is-info' : ''}" data-mood="sad">😢 슬픔</button>
-    </div>
-  </div>
-  <div>
-    <button class="button is-danger" id="delete-btn">삭제</button>
-    <button class="button is-link" id="save-btn">저장</button>
-  </div>
-</div>
-
-
-                            `;
-
-                            let selectedMood = savedData.mood;
-
-                            document.querySelectorAll(".mood-btn").forEach(button => {
-                                button.addEventListener("click", function () {
-                                    selectedMood = this.dataset.mood;
-                                    document.querySelectorAll(".mood-btn").forEach(btn => btn.classList.remove("is-success", "is-warning", "is-info"));
-                                    this.classList.add(selectedMood === "happy" ? "is-success" : selectedMood === "neutral" ? "is-warning" : "is-info");
-                                });
-                            });
-
-                            document.getElementById("save-btn").addEventListener("click", function () {
-                                savedData.title = document.getElementById("diary-title").value;
-                                savedData.content = document.getElementById("diary-content").value;
-                                savedData.mood = selectedMood;
-
-                                fetch('/diary', {
-                                    method: 'POST',
-                                    headers: { 'Content-Type': 'application/json' },
-                                    body: JSON.stringify(savedData)
-                                }).then(response => response.json())
-                                    .then(data => {
-                                        alert(data.message);
-                                        savedData.editMode = false;
-                                        renderUI();
-                                    });
-                            });
-
-                            document.getElementById("delete-btn").addEventListener("click", function () {
-                                fetch(`/diary?dateKey=${savedData.date}`, { method: 'DELETE' })
-                                    .then(response => response.json())
-                                    .then(data => {
-                                        alert(data.message);
-                                        uiSection.innerHTML = `<p>일기가 삭제되었습니다.</p>`;
-                                    });
-                            });
-
-                        } else {
-                            uiSection.innerHTML = `
-                                <h2 class="title is-3">${year}년 ${month}월 ${dayNumber}일</h2>
-
-<p style="font-weight: bold; font-size: 1.4em;">${savedData.title || "(제목 없음)"}</p>
-<hr style="height: 2px; border: none; background-color: black;">
-
-
-<div style="height: 60vh; overflow-y: auto;">
-  <p>${savedData.content || "(내용 없음)"}</p>
-</div>
-
-<hr style="height: 2px; border: none; background-color: black;">
-
-
-<div style="display: flex; justify-content: space-between; align-items: center;">
-  <p>오늘의 기분: ${savedData.mood === "happy" ? "😊 행복" : savedData.mood === "neutral" ? "😐 보통" : savedData.mood === "sad" ? "😢 슬픔" : "❓ 없음"}</p>
-  <button id="edit-btn" style="background:none; border:none; cursor:pointer; font-size:2.5em;">✎</button>
-</div>
-                            `;
-
-                            document.getElementById("edit-btn").addEventListener("click", function () {
-                                savedData.editMode = true;
-                                renderUI();
-                            });
-                        }
-                    }
-
-                    renderUI();
-                });
-        }
-
-        // 캘린더 날짜 클릭 이벤트
-        days.forEach(day => {
-            day.addEventListener("click", function (event) {
-                event.preventDefault();
-                handleDateSelection(day);
-            });
-        });
-
-        // UI 섹션의 링크 클릭 이벤트
-        if (staticLink) {
-            staticLink.addEventListener("click", function (event) {
-                event.preventDefault();
-                handleDateSelection(staticLink);
-            });
-        }
-    });
-</script>
-
 
 </html>
