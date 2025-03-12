@@ -310,3 +310,20 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 });
+document.getElementById('dateIconButton').addEventListener('click', function () {
+    document.getElementById('datePicker').click();  // 날짜 피커 열기
+});
+
+document.getElementById('datePicker').addEventListener('change', function () {
+    var selectedDate = new Date(this.value);
+    var year = selectedDate.getFullYear();
+    var month = selectedDate.getMonth() + 1; // 월을 1부터 시작
+    window.location.href = '/home?year=' + year + '&month=' + month;
+});
+
+document.getElementById('dateIconButton').addEventListener('click', function () {
+    var datePicker = document.getElementById('datePicker');
+    datePicker.style.visibility = 'visible'; // 잠깐 보이게 처리
+    datePicker.click();
+    datePicker.style.visibility = 'hidden'; // 다시 숨김
+});
