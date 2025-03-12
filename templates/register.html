@@ -4,6 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
     <title>회원가입 페이지</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css">
@@ -120,36 +123,36 @@
                     </h1>
                     <div class="field-container">
                         <div class="field">
-                            <label class="label">별명</label>
+                            <label class="label" for="usernick">이름</label>
                             <div class="control has-icons-left">
-                                <input class="input input-underline" type="text" id="nickname">
+                                <input class="input input-underline" type="text" id="usernick">
                                 <span class="icon is-small is-left">
                                     <i class="fas fa-user"></i>
                                 </span>
                             </div>
                         </div>
                         <div class="field">
-                            <label class="label">ID</label>
+                            <label class="label" for="userid" >ID</label>
                             <div class="control has-icons-left">
-                                <input class="input input-underline" type="text" id="username">
+                                <input class="input input-underline" type="text" id="userid">
                                 <span class="icon is-small is-left">
                                     <i class="fas fa-envelope"></i>
                                 </span>
                             </div>
                         </div>
                         <div class="field">
-                            <label class="label">password</label>
+                            <label class="label" for="userpw">password</label>
                             <div class="control has-icons-left">
-                                <input class="input input-underline" type="password" id="password">
+                                <input class="input input-underline" type="password" id="userpw">
                                 <span class="icon is-small is-left">
                                     <i class="fas fa-lock"></i>
                                 </span>
                             </div>
                         </div>
                         <div class="field">
-                            <label class="label">password 확인</label>
+                            <label class="label" for="confirmPassword">password 확인</label>
                             <div class="control has-icons-left">
-                                <input class="input input-underline" type="password" id="passwordCheck">
+                                <input class="input input-underline" type="password" id= "confirmPassword">
                                 <span class="icon is-small is-left">
                                     <i class="fas fa-lock"></i>
                                 </span>
@@ -158,7 +161,7 @@
                     </div>
 
                     <!-- 확인 버튼 우측 하단으로 이동 -->
-                    <button class="signupEnd-button" onclick="validateSignup()">
+                    <button class="signupEnd-button" onclick="register()">
                         <!-- 화살표 아이콘 -->
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                             stroke="currentColor" class="size-6">
@@ -171,28 +174,41 @@
             </div>
         </div>
     </div>
-
     <script>
-        function validateSignup() {
-            const nickname = document.getElementById('nickname').value;
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            const passwordCheck = document.getElementById('passwordCheck').value;
-
-            if (nickname === '' || username === '' || password === '' || passwordCheck === '') {
-                alert('모든 필드를 입력해주세요.');
+   
+        // 간단한 회원가입 함수입니다.
+        // 아이디, 비밀번호, 닉네임을 받아 DB에 저장합니다.
+        function register() {
+            var password = $('#userpw').val();
+            var confirmPassword = $('#confirmPassword').val();
+    
+            if (password !== confirmPassword){
+                alert('비밀번호가 일치하지 않습니다.');
                 return;
             }
-
-            if (password !== passwordCheck) {
-                alert('비밀번호 확인이 일치하지 않습니다.');
-                return;
-            }
-
-            // 여기에 실제 회원가입 로직을 추가할 수 있습니다.
-            alert('회원가입 성공!');
+            $.ajax({
+                type: "POST",
+                url: "/api/register",
+                data: {
+                    id_give: $('#userid').val(),
+                    pw_give: $('#userpw').val(),
+                    nickname_give: $('#usernick').val()
+                },
+                success: function (response) {
+                    if (response['result'] == 'success') {
+                        alert('회원가입이 완료되었습니다.')
+                        window.location.href = '/login'
+                    } else {
+                        alert(response['msg'])
+                    }
+                }
+            })
         }
+        
+        
+    
     </script>
+    
 </body>
 
 </html>

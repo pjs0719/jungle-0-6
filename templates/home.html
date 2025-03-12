@@ -1,0 +1,90 @@
+<head>
+    <meta charset="UTF-8">
+    <title>캘린더</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap">
+    <link href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+</head>
+
+<body>
+    <div class="top-right-bar">
+        <span>닉네임 님</span>
+        <button onclick="logout()"
+            style="width: 40px; height: 40px; border: 1px solid #000000; background: none; color: #000000; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+            <span style="font-size: 1.5rem;">→</span>
+        </button>
+    </div>
+    <div class="calendar-section">
+        <header class="is-flex is-justify-content-space-between is-align-items-center">
+            <p class="current-date">{{ year }}년 {{ month }}월</p>
+            <div class="navigation is-flex is-align-items-center">
+                <a href="javascript:void(0);" onclick="location.reload();">
+                    <span class="icon is-small has-text-black">
+                        <i class="fas fa-search"></i> <!-- 기본 돋보기 아이콘 -->
+                    </span>
+                </a>
+        
+                <a href="/home?year={{ year }}&month={{ month - 1 }}">
+                    <div class="arrow arrow-down"></div>
+                </a>
+                <a href="/home?year={{ year }}&month={{ month + 1 }}">
+                    <div class="arrow arrow-up"></div>
+                </a>
+            </div>
+        </header>
+        
+
+            <div class="calendar">
+                <ul class="weeks">
+                    <li>일</li>
+                    <li>월</li>
+                    <li>화</li>
+                    <li>수</li>
+                    <li>목</li>
+                    <li>금</li>
+                    <li>토</li>
+                </ul>
+
+                <ul class="days">
+                    {% for week in calendar %}
+                    {% for day in week %}
+                    {% if day > 0 %}
+                    {% set is_highlighted = highlight_days.get(day, False) %}
+                    <li class="{{ 'highlight' if is_highlighted else '' }}">
+                        <a href="#" data-year="{{ year }}" data-month="{{ month }}" data-day="{{ day }}">
+                            {{ day }}
+                        </a>
+                    </li>
+                    {% else %}
+                    <li class="inactive"></li>
+                    {% endif %}
+                    {% endfor %}
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="ui-section">
+        <h2 class="title is-3">정글 일기</h2>
+        
+        <hr>
+        <h3 class="title is-4">감정별 검색</h3>
+        <!-- 감정 필터 버튼 -->
+        <div class="mood-filter">
+            <button class="button mood-filter-btn is-success" data-mood="happy">😊 행복한 일기</button>
+            <button class="button mood-filter-btn is-warning" data-mood="neutral">😐 보통의 일기</button>
+            <button class="button mood-filter-btn is-info" data-mood="sad">😢 슬픈 일기</button>
+        </div>
+       
+        <!-- 일기 목록이 표시될 영역 -->
+        <div id="filtered-diaries"></div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+
+</html>

@@ -1,90 +1,39 @@
-<head>
-    <meta charset="UTF-8">
-    <title>캘린더</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap">
-    <link href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<!doctype html>
+<html lang="en">
+  <head>
 
-</head>
+    <!-- Webpage Title -->
+    <title>Hello, world!</title>
 
-<body>
-    <div class="top-right-bar">
-        <span>닉네임 님</span>
-        <button onclick="logout()"
-            style="width: 40px; height: 40px; border: 1px solid #000000; background: none; color: #000000; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center;">
-            <span style="font-size: 1.5rem;">→</span>
-        </button>
-    </div>
-    <div class="calendar-section">
-        <header class="is-flex is-justify-content-space-between is-align-items-center">
-            <p class="current-date">{{ year }}년 {{ month }}월</p>
-            <div class="navigation is-flex is-align-items-center">
-                <a href="javascript:void(0);" onclick="location.reload();">
-                    <span class="icon is-small has-text-black">
-                        <i class="fas fa-search"></i> <!-- 기본 돋보기 아이콘 -->
-                    </span>
-                </a>
-        
-                <a href="/?year={{ year }}&month={{ month - 1 }}">
-                    <div class="arrow arrow-down"></div>
-                </a>
-                <a href="/?year={{ year }}&month={{ month + 1 }}">
-                    <div class="arrow arrow-up"></div>
-                </a>
-            </div>
-        </header>
-        
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-            <div class="calendar">
-                <ul class="weeks">
-                    <li>일</li>
-                    <li>월</li>
-                    <li>화</li>
-                    <li>수</li>
-                    <li>목</li>
-                    <li>금</li>
-                    <li>토</li>
-                </ul>
+    <!-- Bulma CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+		<!-- JS -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
 
-                <ul class="days">
-                    {% for week in calendar %}
-                    {% for day in week %}
-                    {% if day > 0 %}
-                    {% set is_highlighted = highlight_days.get(day, False) %}
-                    <li class="{{ 'highlight' if is_highlighted else '' }}">
-                        <a href="#" data-year="{{ year }}" data-month="{{ month }}" data-day="{{ day }}">
-                            {{ day }}
-                        </a>
-                    </li>
-                    {% else %}
-                    <li class="inactive"></li>
-                    {% endif %}
-                    {% endfor %}
-                    {% endfor %}
-                </ul>
-            </div>
-        </div>
-    </div>
 
-    <div class="ui-section">
-        <h2 class="title is-3">정글 일기</h2>
-        
-        <hr>
-        <h3 class="title is-4">감정별 검색</h3>
-        <!-- 감정 필터 버튼 -->
-        <div class="mood-filter">
-            <button class="button mood-filter-btn is-success" data-mood="happy">😊 행복한 일기</button>
-            <button class="button mood-filter-btn is-warning" data-mood="neutral">😐 보통의 일기</button>
-            <button class="button mood-filter-btn is-info" data-mood="sad">😢 슬픈 일기</button>
-        </div>
-       
-        <!-- 일기 목록이 표시될 영역 -->
-        <div id="filtered-diaries"></div>
-    </div>
+    <script>
+      // 로그아웃은 내가 가지고 있는 토큰만 쿠키에서 없애면 됩니다.
+      function logout(){
+        $.removeCookie('mytoken');
+        alert('로그아웃!')
+        window.location.href='/login'
+      }
 
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
-</body>
+    </script>
 
+
+  </head>
+  <body>
+    <p>
+      <h1 class="title">로그인하고 5초 동안만 볼 수 있는 페이지입니다.</h1>
+      <h1 class="subtitle">계속 새로고침 해보세요</h1>
+    </p>
+    <h5 class="subtitle">나의 닉네임은: {{nickname}}</h5>
+    <button class="button is-danger" onclick="logout()">로그아웃하기</button>
+  </body>
 </html>

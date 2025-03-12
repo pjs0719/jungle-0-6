@@ -140,7 +140,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     })
                     .then(data => {
                         alert(data.message);
-                        window.location.href = "/";  // 전체 페이지를 초기 상태로 새로고침
+                     // 전체 페이지를 초기 상태로 새로고침
                     })
                     .catch(error => {
                         console.error("Error deleting diary:", error);
