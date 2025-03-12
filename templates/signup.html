@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,9 +8,9 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     <style>
-        /* 배경 이미지 */
+        /* 배경 이미지 다시 추가 */
         body {
-            background-image: url('https://cdn.pixabay.com/photo/2018/11/11/09/30/nature-3808354_1280.jpg'); /* 편안한 자연 풍경 이미지 */
+            background-image: url('https://cdn.pixabay.com/photo/2018/11/11/09/30/nature-3808354_1280.jpg');
             background-size: cover;
             background-position: center;
             height: 100vh;
@@ -24,78 +25,152 @@
         }
 
         .login-card {
-            width: 350px;
+            width: 400px;
+            height: 70vh;
             position: relative;
-            padding-bottom: 60px; /* 하단 버튼과 겹치지 않도록 여백 추가 */
-            background-color: rgba(255, 255, 255, 0.8); /* 배경을 약간 투명하게 해서 이미지와 조화롭게 */
-            border-radius: 10px; /* 카드 테두리 둥글게 */
+            padding-bottom: 70px;
+            background-color: rgba(255, 255, 255, 1);
+            border-radius: 10px;
         }
 
         .title-with-icon {
             display: flex;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start;
+            padding-left: 20px;
+            margin-top: 10px;
+            position: relative;
+            left: 0;
+            text-decoration: none;
+            padding-bottom: 50px;
         }
 
-        /* 확인 버튼 (우측 하단으로 이동) */
+        /* 입력 필드 스타일 수정 */
+        .input-underline {
+            border: none;
+            border-bottom: 1px solid #dbdbdb;
+            box-shadow: none;
+            border-radius: 0;
+            padding-left: 30px;
+            padding-right: 0;
+            margin-left: -5px;
+        }
+
+        .input-underline:focus {
+            border-bottom: 2px solid #3273dc;
+        }
+
+        /* Placeholder 텍스트 왼쪽 정렬 */
+        .input-underline::placeholder {
+            text-align: left;
+            opacity: 0.7;
+        }
+
+        /* 입력 필드 컨테이너 스타일 */
+        .field-container {
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+
+        .field {
+            margin-bottom: 20px;
+        }
+
+        /* 로그인 버튼 스타일 (동그라미 형태) */
         .signupEnd-button {
             position: absolute;
-            right: 10px;
-            bottom: 10px;
+            right: -34px;
+            bottom: 40px;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background-color: #209CEE;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s ease;
+        }
+
+        .signupEnd-button:hover {
+            background-color: #1468a3;
+        }
+
+        /* 화살표 크기와 색상 변경 */
+        .signupEnd-button svg {
+            width: 40px;
+            height: 40px;
+            fill: none;
+            stroke: white;
+            margin: 0;
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="login-container">
             <div class="card login-card">
                 <div class="card-content">
-                    <h1 class="title has-text-centered title-with-icon">
+                    <h1 class="title has-text-left title-with-icon">
                         회원가입
                     </h1>
-                    <div class="field">
-                        <label class="label">nickname</label>
-                        <div class="control has-icons-left">
-                            <input class="input" type="text" placeholder="nickname">
-                            <span class="icon is-small is-left">
-                                <i class="fas fa-envelope"></i>
-                            </span>
+                    <div class="field-container">
+                        <div class="field">
+                            <label class="label">별명</label>
+                            <div class="control has-icons-left">
+                                <input class="input input-underline" type="text" >
+                                <span class="icon is-small is-left">
+                                    <i class="fas fa-user"></i>
+                                </span>
+                            </div>
                         </div>
-                    </div>
-                    <div class="field">
-                        <label class="label">ID</label>
-                        <div class="control has-icons-left">
-                            <input class="input" type="text" placeholder="ID">
-                            <span class="icon is-small is-left">
-                                <i class="fas fa-envelope"></i>
-                            </span>
+                        <div class="field">
+                            <label class="label">ID</label>
+                            <div class="control has-icons-left">
+                                <input class="input input-underline" type="text">
+                                <span class="icon is-small is-left">
+                                    <i class="fas fa-envelope"></i>
+                                </span>
+                            </div>
                         </div>
-                    </div>
-                    <div class="field">
-                        <label class="label">password</label>
-                        <div class="control has-icons-left">
-                            <input class="input" type="password" placeholder="password">
-                            <span class="icon is-small is-left">
-                                <i class="fas fa-lock"></i>
-                            </span>
+                        <div class="field">
+                            <label class="label">password</label>
+                            <div class="control has-icons-left">
+                                <input class="input input-underline" type="password" >
+                                <span class="icon is-small is-left">
+                                    <i class="fas fa-lock"></i>
+                                </span>
+                            </div>
                         </div>
-                    </div>
-                    <div class="field">
-                        <label class="label">password 확인</label>
-                        <div class="control has-icons-left">
-                            <input class="input" type="password" placeholder="password 확인">
-                            <span class="icon is-small is-left">
-                                <i class="fas fa-lock"></i>
-                            </span>
+                        <div class="field">
+                            <label class="label">password 확인</label>
+                            <div class="control has-icons-left">
+                                <input class="input input-underline" type="password" >
+                                <span class="icon is-small is-left">
+                                    <i class="fas fa-lock"></i>
+                                </span>
+                            </div>
                         </div>
                     </div>
 
                     <!-- 확인 버튼 우측 하단으로 이동 -->
-                    <button class="button is-primary signupEnd-button">확인</button>
+                    <button class="signupEnd-button">
+                        <!-- 화살표 아이콘 -->
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" class="size-6">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M17.25 8.25 21 12m0 0-3.75 3.75M21 12H3" />
+                        </svg>
+                    </button>
 
                 </div>
             </div>
         </div>
     </div>
 </body>
+
 </html>
