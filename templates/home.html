@@ -63,7 +63,7 @@
                     {% for day in week %}
                     {% if day > 0 %}
                     {% set is_highlighted = highlight_days.get(day, False) %}
-                    <li class="{{ 'highlight' if is_highlighted else '' }}">
+                    <li class="{{ 'highlight' if is_highlighted else '' }}" data-day="{{ day }}">
                         <a href="#" data-year="{{ year }}" data-month="{{ month }}" data-day="{{ day }}">
                             {{ day }}
                         </a>
@@ -74,6 +74,7 @@
                     {% endfor %}
                     {% endfor %}
                 </ul>
+
             </div>
         </div>
     </div>

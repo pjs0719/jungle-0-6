@@ -266,3 +266,20 @@ header .navigation {
     margin-right: 0.5rem;
     /* 버튼 안의 아이콘과 텍스트 간 간격을 줄여줍니다 */
 }
+.days li.selected a {
+    position: relative;
+    display: inline-block;
+    width: 80px;
+    height: 80px;
+    line-height: 80px;
+    /* 세로 중앙 정렬 */
+    text-align: center;
+    /* 가로 중앙 정렬 */
+    border-radius: 50%;
+    /* 원 모양을 만들기 위해 */
+    border: 2px solid #007BFF;
+    /* 동그라미 테두리 색상 */
+    /* 숫자 색상 */
+    text-decoration: none;
+    /* 링크 기본 스타일 제거 */
+}

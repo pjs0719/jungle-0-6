@@ -327,3 +327,21 @@ document.getElementById('dateIconButton').addEventListener('click', function () 
     datePicker.click();
     datePicker.style.visibility = 'hidden'; // 다시 숨김
 });
+document.querySelectorAll('.days li').forEach(function (li) {
+    li.addEventListener('click', function (e) {
+        // 기본 동작 방지 (링크 클릭 시 페이지 이동 방지)
+        e.preventDefault();
+
+        // 이미 선택된 날짜를 클릭하면 선택 해제
+        if (li.classList.contains('selected')) {
+            li.classList.remove('selected');
+        } else {
+            // 모든 날짜에서 'selected' 클래스 제거
+            document.querySelectorAll('.days li').forEach(function (el) {
+                el.classList.remove('selected');
+            });
+            // 선택된 날짜에 'selected' 클래스 추가
+            li.classList.add('selected');
+        }
+    });
+});
